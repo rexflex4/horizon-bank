@@ -1,22 +1,34 @@
 (function () {
-  const STORAGE_KEY = "hyakugo_bank_cms_v1";
+  const STORAGE_KEY = "chb_portal_db_v1";
+  const SESSION_KEY = "chb_active_user_id";
+  const ADMIN_SESSION_KEY = "chb_admin_unlocked";
 
-  const DEFAULT_CMS = {
+  const DEFAULT_DB = {
+    contact: {
+      domain: "crimsonhorizonbank.jp",
+      email: "horizonbank.jp@gmail.com",
+      phone: "+81-3-5550-0105",
+      address: "Otemachi Financial Tower, Tokyo, Japan"
+    },
+    adminCredentials: {
+      username: "admin",
+      passcode: "CHB2026"
+    },
     alert: {
       enabled: true,
       style: "alert-info",
-      text: "【Important】 Hyakugo ID (Passkey FIDO2) authentication is now active for Hyakugo Direct Banking."
+      text: "Welcome to Crimson Horizon Bank Digital Banking — 24/7 Passkey-Protected Online Transfers are live."
     },
     hero: {
-      badge: "Est. 1878 • Tsu City, Mie • Bank Code 0155",
-      title: "Trusted Regional Strength Meets Next-Gen Digital Banking.",
-      desc: "Serving Mie, Aichi, Tokyo, and beyond with 24/7 Hyakugo Direct Banking, Passbook-less Smartphone Banking, and NISA wealth support.",
-      cta: "Open Hyakugo Direct Portal →"
+      badge: "Crimson Horizon Bank • Digital & Private Banking",
+      title: "Modern Banking Built for Clarity, Speed, and Security.",
+      desc: "Open an account in minutes, manage JPY and global savings in our 3D dashboard, and enjoy zero-fee internal transfers.",
+      cta: "Open Free Account →"
     },
     rates: {
       usdJpy: "¥151.40",
       eurJpy: "¥160.25",
-      timeRate: "0.35%",
+      timeRate: "0.45%",
       loanRate: "0.475%"
     },
     templates: [
@@ -24,67 +36,79 @@
         id: "t1",
         title: "Scheduled System Maintenance (2nd Sunday)",
         type: "warning",
-        body: "Hyakugo Direct Banking will undergo scheduled maintenance on the 2nd Sunday of this month from 0:00 to 6:00 JST."
+        body: "Horizon Online Banking will undergo scheduled maintenance on the 2nd Sunday from 00:00 to 05:00 JST."
       },
       {
         id: "t2",
-        title: "Anti-Phishing & Hyakugo ID Passkey Alert",
+        title: "Security Notice: Protect Your Login Credentials",
         type: "danger",
-        body: "Security Alert: Hyakugo Bank never requests your PIN via SMS links. Enable FIDO2 Passkey login via Hyakugo ID."
+        body: "Crimson Horizon Bank never asks for your password via SMS or email links. Always verify our official domain before signing in."
       },
       {
         id: "t3",
-        title: "New Campaign: High-Yield Time Deposit",
+        title: "New Campaign: 0.45% APY 1-Year Time Deposit",
         type: "campaign",
-        body: "Special Campaign! Open an online Time Deposit via Smartphone Banking and earn preferential interest rates."
+        body: "Open a 1-Year Time Deposit inside your Horizon Dashboard and earn a preferential 0.45% annual yield."
       },
       {
         id: "t4",
-        title: "Mie & Tokai Regional Weather Advisory",
+        title: "Holiday Banking & Wire Transfer Schedule",
         type: "info",
-        body: "During severe weather alerts in Mie Prefecture, please use 24/7 Hyakugo Smartphone Banking from home."
+        body: "Internal transfers run 24/7. Interbank wires submitted on public holidays settle on the next business morning."
       }
     ],
     notices: [
-      { id: "n1", date: "2026.11.25", tag: "Security", tagClass: "tag-red", text: "Passkey (FIDO2) authentication rollout completed across Hyakugo Direct and Smartphone Banking." },
-      { id: "n2", date: "2026.11.18", tag: "Campaign", tagClass: "tag-green", text: "New NISA Automated Investment Plan: Start from ¥5,000/month with reduced digital fees." },
-      { id: "n3", date: "2026.11.10", tag: "Maintenance", tagClass: "tag-amber", text: "Regular monthly maintenance occurs every 2nd Sunday from 00:00 to 06:00 JST." }
+      { id: "n1", date: "2026.11.25", tag: "Security", tagClass: "tag-red", text: "Enhanced 3D Card Freeze & Instant Controls are now available to all online banking customers." },
+      { id: "n2", date: "2026.11.18", tag: "Campaign", tagClass: "tag-green", text: "New customers receive an instant digital checking & savings setup with zero monthly maintenance fee." },
+      { id: "n3", date: "2026.11.10", tag: "Maintenance", tagClass: "tag-amber", text: "Scheduled system check occurs every 2nd Sunday from 00:00 to 05:00 JST." }
     ],
     insights: [
       {
         id: "i1",
-        tag: "1878 Heritage",
-        title: "Why It’s Called 'Hyakugo' (105)",
-        body: "Founded in 1878 in Tsu City as the 105th National Bank (第百五国立銀行)—making Hyakugo one of Japan’s proudest historic regional banks."
+        tag: "Smart Finance",
+        title: "The 50 / 30 / 20 Budgeting Rule in Japan",
+        body: "Allocate 50% of take-home pay to essentials, 30% to lifestyle, and automate 20% straight into high-yield savings or NISA funds."
       },
       {
         id: "i2",
-        tag: "Smart Security",
-        title: "How Hyakugo ID Passkeys Stop Phishing",
-        body: "Unlike SMS OTPs, FIDO2 Passkeys bind your biometrics directly to our verified domain—blocking phishing attacks."
+        tag: "Cybersecurity",
+        title: "Why Card Freeze Stops Online Fraud Instantly",
+        body: "With our 3D Horizon Card controls, locking your card disables online and POS charges in milliseconds while keeping recurring utility bills safe."
       },
       {
         id: "i3",
-        tag: "Mie Economy",
-        title: "Supporting Ise-Shima & Tokai Innovation",
-        body: "With 145+ branches and desks in Shanghai and Bangkok, Hyakugo Bank connects local Mie businesses to global markets."
+        tag: "Global FX",
+        title: "Holding Multi-Currency Reserves for Travel",
+        body: "Exchange JPY into USD or EUR ahead of international trips inside your Global Vault to lock in favorable rates."
       }
     ],
-    banking: {
-      ordinary: 2485320,
-      time: 5000000,
-      nisa: 1840000,
-      ledger: [
-        { title: "TechCorp Japan Salary", meta: "Direct Deposit • Today", amount: 385000 },
-        { title: "Matsusaka Local Mart", meta: "105BESTIO Debit • Yesterday", amount: -8420 },
-        { title: "Chubu Electric Power", meta: "Auto-Debit • Nov 22", amount: -11300 },
-        { title: "eMAXIS Slim NISA Auto-Buy", meta: "Investment • Nov 20", amount: -50000 }
-      ]
-    }
+    customers: [
+      {
+        id: "u_demo",
+        fullName: "Alex Morgan",
+        email: "demo@horizonbank.jp",
+        phone: "+81-90-1234-5678",
+        password: "Demo1234",
+        accountNumber: "8801-001-4821",
+        status: "Active",
+        balances: {
+          checking: 2485320,
+          savings: 5000000,
+          vault: 1840000
+        },
+        savingsGoal: { name: "Tokyo Condo Down Payment", target: 8000000, current: 5000000 },
+        ledger: [
+          { title: "TechCorp Payroll Deposit", meta: "Direct Deposit • Today", amount: 385000 },
+          { title: "Shibuya Electronics", meta: "Horizon Card • Yesterday", amount: -14800 },
+          { title: "Tokyo Electric Power", meta: "Auto-Debit • Nov 22", amount: -11300 },
+          { title: "Monthly Automated Savings", meta: "Internal Vault • Nov 20", amount: -50000 }
+        ]
+      }
+    ]
   };
 
   function cloneDefaults() {
-    return JSON.parse(JSON.stringify(DEFAULT_CMS));
+    return JSON.parse(JSON.stringify(DEFAULT_DB));
   }
 
   function load() {
@@ -96,18 +120,89 @@
     }
   }
 
-  function save(data) {
+  function save(db) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch {
-      // Storage unavailable fallback
-    }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    } catch { /* ignore */ }
   }
 
   function reset() {
     const fresh = cloneDefaults();
     save(fresh);
     return fresh;
+  }
+
+  function registerCustomer({ fullName, email, phone, password }) {
+    const db = load();
+    const cleanEmail = email.trim().toLowerCase();
+    if (db.customers.some((c) => c.email.toLowerCase() === cleanEmail)) {
+      return { ok: false, error: "An account with this email already exists." };
+    }
+
+    const rand4 = Math.floor(1000 + Math.random() * 9000);
+    const newUser = {
+      id: "u_" + Date.now(),
+      fullName: fullName.trim(),
+      email: cleanEmail,
+      phone: phone.trim(),
+      password: password,
+      accountNumber: `8801-002-${rand4}`,
+      status: "Active",
+      balances: {
+        checking: 100000, // Demo starter welcome deposit
+        savings: 0,
+        vault: 0
+      },
+      savingsGoal: { name: "Emergency Reserve", target: 1000000, current: 0 },
+      ledger: [
+        { title: "Welcome Starter Deposit", meta: "Crimson Horizon Bonus • Just now", amount: 100000 }
+      ]
+    };
+
+    db.customers.push(newUser);
+    save(db);
+    setSession(newUser.id);
+    return { ok: true, user: newUser };
+  }
+
+  function loginCustomer(email, password) {
+    const db = load();
+    const cleanEmail = email.trim().toLowerCase();
+    const user = db.customers.find((c) => c.email.toLowerCase() === cleanEmail && c.password === password);
+    if (!user) return { ok: false, error: "Invalid email or password." };
+    if (user.status === "Suspended") return { ok: false, error: "This account is currently suspended. Contact " + db.contact.email };
+    setSession(user.id);
+    return { ok: true, user };
+  }
+
+  function setSession(userId) {
+    try { localStorage.setItem(SESSION_KEY, userId); } catch {}
+  }
+
+  function getCurrentUser() {
+    try {
+      const id = localStorage.getItem(SESSION_KEY);
+      if (!id) return null;
+      const db = load();
+      return db.customers.find((c) => c.id === id) || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function logoutCustomer() {
+    try { localStorage.removeItem(SESSION_KEY); } catch {}
+  }
+
+  function isAdminUnlocked() {
+    try { return sessionStorage.getItem(ADMIN_SESSION_KEY) === "1"; } catch { return false; }
+  }
+
+  function setAdminUnlocked(val) {
+    try {
+      if (val) sessionStorage.setItem(ADMIN_SESSION_KEY, "1");
+      else sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    } catch {}
   }
 
   function escapeHtml(str) {
@@ -120,12 +215,12 @@
     return new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(amount);
   }
 
-  function renderAlertBar(cms) {
+  function renderAlertBar(db) {
     const bar = document.getElementById("liveAlertBar");
     const txt = document.getElementById("liveAlertText");
     if (!bar || !txt) return;
-    bar.className = "live-alert-bar " + cms.alert.style + (cms.alert.enabled ? "" : " hidden");
-    txt.textContent = cms.alert.text;
+    bar.className = "live-alert-bar " + db.alert.style + (db.alert.enabled ? "" : " hidden");
+    txt.textContent = db.alert.text;
   }
 
   let toastTimer;
@@ -138,10 +233,17 @@
     toastTimer = setTimeout(() => el.classList.remove("show"), 3000);
   }
 
-  window.HyakugoStore = {
+  window.HorizonStore = {
+    STORAGE_KEY,
     load,
     save,
     reset,
+    registerCustomer,
+    loginCustomer,
+    getCurrentUser,
+    logoutCustomer,
+    isAdminUnlocked,
+    setAdminUnlocked,
     escapeHtml,
     formatJPY,
     renderAlertBar,
