@@ -1,5 +1,15 @@
 (function () {
-  const { load, save, reset, escapeHtml, renderAlertBar, showToast } = window.HyakugoStore;
+  const {
+    load,
+    save,
+    reset,
+    isAdminUnlocked,
+    setAdminUnlocked,
+    escapeHtml,
+    formatJPY,
+    renderAlertBar,
+    showToast
+  } = window.HorizonStore;
 
   const TAG_MAP = {
     info: { label: "Notice", cls: "tag-blue", alert: "alert-info" },
@@ -9,65 +19,94 @@
   };
 
   const INSIGHT_PRESETS = {
-    heritage: {
-      tag: "1878 Heritage",
-      title: "Kawakita Shirobei & The Spirit of Ise Merchants",
-      body: "In the Meiji era, prominent Ise merchants joined Hyakugo Bank’s leadership, blending samurai discipline with practical regional commerce."
+    compound: {
+      tag: "Wealth Building",
+      title: "The Power of Automated Monthly Deposits",
+      body: "Setting an automatic monthly transfer into your Time Deposit Vault builds steady compounding reserves without needing daily effort."
     },
-    ise: {
-      tag: "Regional Economy",
-      title: "Supporting Green & Sustainable Local Businesses in Mie",
-      body: "Hyakugo Bank Group’s Sustainability Policy channels financing toward clean energy, local agriculture, and regional revitalization across Tokai."
+    phishing: {
+      tag: "Security Guide",
+      title: "3 Ways to Spot Fake Banking Messages",
+      body: "Always verify the official domain in your address bar, never share one-time codes, and freeze your 3D Horizon Card if you see unknown activity."
     },
-    passkey: {
-      tag: "Cybersecurity",
-      title: "3 Steps to Enable Passkey Login on Hyakugo Direct",
-      body: "Register your Hyakugo ID once, link your smartphone biometrics (Face ID / Touch ID), and enjoy password-free banking with zero SMS risk."
-    },
-    nisa: {
-      tag: "Smart Finance",
-      title: "Why Starting NISA Early Multiplies Tax-Free Growth",
-      body: "Automating ¥10,000/month in diversified global index funds through Hyakugo Direct lets compound returns grow tax-free over decades."
+    fx: {
+      tag: "Global FX",
+      title: "Locking Exchange Rates Before You Travel",
+      body: "Moving funds into your Global Vault ahead of international trips protects your travel budget from sudden currency swings."
     }
   };
 
-  function openAdminTab(tabName) {
-    const target = document.getElementById("admintab-" + tabName);
-    if (!target) return;
-
-    document.querySelectorAll(".admin-panel-tab").forEach((t) => t.classList.remove("active"));
-    document.querySelectorAll(".admin-nav-btn").forEach((b) => b.classList.remove("active"));
-
-    target.classList.add("active");
-    const navBtn = document.querySelector(`.admin-nav-btn[data-admintab="${tabName}"]`);
-    if (navBtn) navBtn.classList.add("active");
+  function checkGate() {
+    const unlocked = isAdminUnlocked();
+    document.getElementById("adminGate").style.display = unlocked ? "none" : "grid";
+    document.getElementById("adminWorkspace").style.display = unlocked ? "block" : "none";
+    if (unlocked) renderAdmin();
   }
 
-  function renderAdminPage() {
-    const cms = load();
-    renderAlertBar(cms);
+  document.getElementById("adminLoginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const db = load();
+    const u = document.getElementById("admUser").value.trim();
+    const p = document.getElementById("admPass").value;
+    const errEl = document.getElementById("admGateError");
 
-    // Sync Banner & Hero inputs
-    document.getElementById("admAlertEnabled").checked = cms.alert.enabled;
-    document.getElementById("admAlertStyle").value = cms.alert.style;
-    document.getElementById("admAlertText").value = cms.alert.text;
+    if (u === db.adminCredentials.username && p === db.adminCredentials.passcode) {
+      errEl.style.display = "none";
+      setAdminUnlocked(true);
+      checkGate();
+      showToast("Admin workspace unlocked.");
+    } else {
+      errEl.textContent = "Invalid admin username or passcode.";
+      errEl.style.display = "block";
+    }
+  });
 
-    document.getElementById("admHeroBadge").value = cms.hero.badge;
-    document.getElementById("admHeroTitle").value = cms.hero.title;
-    document.getElementById("admHeroDesc").value = cms.hero.desc;
-    document.getElementById("admHeroCta").value = cms.hero.cta;
+  document.getElementById("adminLockBtn").addEventListener("click", function () {
+    setAdminUnlocked(false);
+    checkGate();
+  });
 
-    // Sync Rates inputs
-    document.getElementById("admUsdJpy").value = cms.rates.usdJpy;
-    document.getElementById("admEurJpy").value = cms.rates.eurJpy;
-    document.getElementById("admTimeRate").value = cms.rates.timeRate;
-    document.getElementById("admLoanRate").value = cms.rates.loanRate;
+  function openAdminTab(tabName) {
+    document.querySelectorAll(".admin-panel-tab").forEach((t) => t.classList.remove("active"));
+    document.querySelectorAll(".admin-nav-btn").forEach((b) => b.classList.remove("active"));
+    const target = document.getElementById("admintab-" + tabName);
+    const btn = document.querySelector(`.admin-nav-btn[data-admintab="${tabName}"]`);
+    if (target) target.classList.add("active");
+    if (btn) btn.classList.add("active");
+  }
 
-    // Render Message Templates
-    const tplListEl = document.getElementById("templatesLibraryList");
-    tplListEl.innerHTML = cms.templates.length === 0
-      ? `<p style="color:var(--muted);">No templates saved. Create one below!</p>`
-      : cms.templates.map((t, idx) => {
+  document.querySelectorAll(".admin-nav-btn").forEach((btn) => {
+    btn.addEventListener("click", () => openAdminTab(btn.dataset.admintab));
+  });
+
+  function renderAdmin() {
+    const db = load();
+    renderAlertBar(db);
+
+    // Sync inputs
+    document.getElementById("admAlertEnabled").checked = db.alert.enabled;
+    document.getElementById("admAlertStyle").value = db.alert.style;
+    document.getElementById("admAlertText").value = db.alert.text;
+
+    document.getElementById("admHeroBadge").value = db.hero.badge;
+    document.getElementById("admHeroTitle").value = db.hero.title;
+    document.getElementById("admHeroDesc").value = db.hero.desc;
+    document.getElementById("admHeroCta").value = db.hero.cta;
+
+    document.getElementById("admDomain").value = db.contact.domain;
+    document.getElementById("admEmail").value = db.contact.email;
+    document.getElementById("admPhone").value = db.contact.phone;
+    document.getElementById("admAddress").value = db.contact.address;
+
+    document.getElementById("admUsdJpy").value = db.rates.usdJpy;
+    document.getElementById("admEurJpy").value = db.rates.eurJpy;
+    document.getElementById("admTimeRate").value = db.rates.timeRate;
+    document.getElementById("admLoanRate").value = db.rates.loanRate;
+
+    // Templates
+    document.getElementById("templatesLibraryList").innerHTML = db.templates.length === 0
+      ? `<p style="color:var(--muted);">No templates yet.</p>`
+      : db.templates.map((t, idx) => {
           const meta = TAG_MAP[t.type] || TAG_MAP.info;
           return `
             <div class="template-card">
@@ -87,11 +126,10 @@
           `;
         }).join("");
 
-    // Render Active Notices
-    const noticesEl = document.getElementById("adminNoticesList");
-    noticesEl.innerHTML = cms.notices.length === 0
-      ? `<p style="color:var(--muted);">No notices currently displayed on the homepage.</p>`
-      : cms.notices.map((n, idx) => `
+    // Active Notices
+    document.getElementById("adminNoticesList").innerHTML = db.notices.length === 0
+      ? `<p style="color:var(--muted);">No active notices.</p>`
+      : db.notices.map((n, idx) => `
           <div class="template-card" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap;">
             <div>
               <span style="font-size:0.78rem; color:var(--muted); margin-right:0.5rem;">${escapeHtml(n.date)}</span>
@@ -102,11 +140,10 @@
           </div>
         `).join("");
 
-    // Render Interesting Information Cards
-    const insightsEl = document.getElementById("adminInsightsList");
-    insightsEl.innerHTML = cms.insights.length === 0
-      ? `<p style="color:var(--muted);">No articles published yet.</p>`
-      : cms.insights.map((ins, idx) => `
+    // Insights
+    document.getElementById("adminInsightsList").innerHTML = db.insights.length === 0
+      ? `<p style="color:var(--muted);">No articles published.</p>`
+      : db.insights.map((ins, idx) => `
           <div class="template-card" style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
             <div>
               <span class="tag tag-blue">${escapeHtml(ins.tag)}</span>
@@ -116,103 +153,132 @@
             <button type="button" class="btn-outline" data-action="delete-insight" data-index="${idx}">Delete</button>
           </div>
         `).join("");
+
+    // Customers
+    document.getElementById("adminCustomersList").innerHTML = db.customers.map((c, idx) => `
+      <div class="template-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <span class="tag ${c.status === "Active" ? "tag-green" : "tag-red"}" style="margin:0 0.4rem 0 0;">${escapeHtml(c.status)}</span>
+          <strong>${escapeHtml(c.fullName)}</strong>
+          <div style="font-size:0.82rem; color:var(--muted); margin-top:0.2rem;">
+            ${escapeHtml(c.email)} • ${escapeHtml(c.phone)} • Acct: ${escapeHtml(c.accountNumber)}
+          </div>
+          <div style="font-size:0.86rem; font-weight:700; margin-top:0.25rem;">
+            Checking: ${formatJPY(c.balances.checking)} | Savings: ${formatJPY(c.balances.savings)}
+          </div>
+        </div>
+        <div style="display:flex; gap:0.45rem; flex-wrap:wrap;">
+          <button type="button" class="btn-dark" data-action="credit-user" data-index="${idx}">+ Credit ¥50,000</button>
+          <button type="button" class="btn-outline" data-action="toggle-status" data-index="${idx}">
+            ${c.status === "Active" ? "Suspend" : "Activate"}
+          </button>
+        </div>
+      </div>
+    `).join("");
   }
 
-  // Sidebar Tab Switching
-  document.querySelectorAll(".admin-nav-btn").forEach((btn) => {
-    btn.addEventListener("click", () => openAdminTab(btn.dataset.admintab));
-  });
-
-  // Template & List Button Actions (Event Delegation)
+  // Event Delegation for Dynamic Buttons
   document.addEventListener("click", function (e) {
     const btn = e.target.closest("button[data-action]");
     if (!btn) return;
-
     const action = btn.dataset.action;
     const idx = Number(btn.dataset.index);
-    const cms = load();
+    const db = load();
 
     if (action === "push-alert") {
-      const t = cms.templates[idx];
+      const t = db.templates[idx];
       const meta = TAG_MAP[t.type] || TAG_MAP.info;
-      cms.alert.enabled = true;
-      cms.alert.style = meta.alert;
-      cms.alert.text = `【${t.title}】 ${t.body}`;
-      save(cms);
-      renderAdminPage();
+      db.alert.enabled = true;
+      db.alert.style = meta.alert;
+      db.alert.text = `【${t.title}】 ${t.body}`;
       showToast("Template pushed to Top Alert Banner!");
     } else if (action === "push-notice") {
-      const t = cms.templates[idx];
+      const t = db.templates[idx];
       const meta = TAG_MAP[t.type] || TAG_MAP.info;
       const today = new Date().toISOString().slice(0, 10).replace(/-/g, ".");
-      cms.notices.unshift({
+      db.notices.unshift({
         id: "n" + Date.now(),
         date: today,
         tag: meta.label,
         tagClass: meta.cls,
         text: `${t.title} — ${t.body}`
       });
-      save(cms);
-      renderAdminPage();
-      showToast("Template published to Website Notices!");
+      showToast("Template added to homepage notices!");
     } else if (action === "delete-tpl") {
-      cms.templates.splice(idx, 1);
-      save(cms);
-      renderAdminPage();
+      db.templates.splice(idx, 1);
       showToast("Template deleted.");
     } else if (action === "delete-notice") {
-      cms.notices.splice(idx, 1);
-      save(cms);
-      renderAdminPage();
-      showToast("Notice removed from website.");
+      db.notices.splice(idx, 1);
+      showToast("Notice removed.");
     } else if (action === "delete-insight") {
-      cms.insights.splice(idx, 1);
-      save(cms);
-      renderAdminPage();
-      showToast("Article deleted from website.");
+      db.insights.splice(idx, 1);
+      showToast("Article deleted.");
+    } else if (action === "credit-user") {
+      const u = db.customers[idx];
+      u.balances.checking += 50000;
+      u.ledger.unshift({
+        title: "Bank Admin Credit Deposit",
+        meta: "Horizon Operations • Just now",
+        amount: 50000
+      });
+      showToast(`Credited ¥50,000 to ${u.fullName}`);
+    } else if (action === "toggle-status") {
+      const u = db.customers[idx];
+      u.status = u.status === "Active" ? "Suspended" : "Active";
+      showToast(`${u.fullName} is now ${u.status}`);
     }
+
+    save(db);
+    renderAdmin();
   });
 
-  // Save Custom Template
   document.getElementById("customTemplateForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    const cms = load();
-    cms.templates.unshift({
+    const db = load();
+    db.templates.unshift({
       id: "t" + Date.now(),
       title: document.getElementById("tplTitle").value.trim(),
       type: document.getElementById("tplType").value,
       body: document.getElementById("tplBody").value.trim()
     });
-    save(cms);
-    renderAdminPage();
+    save(db);
+    renderAdmin();
     e.target.reset();
-    showToast("Custom template saved to library!");
+    showToast("Custom template saved!");
   });
 
-  // Save Top Alert Banner
   document.getElementById("saveAlertBtn").addEventListener("click", function () {
-    const cms = load();
-    cms.alert.enabled = document.getElementById("admAlertEnabled").checked;
-    cms.alert.style = document.getElementById("admAlertStyle").value;
-    cms.alert.text = document.getElementById("admAlertText").value.trim();
-    save(cms);
-    renderAdminPage();
-    showToast("Top Alert Banner updated live!");
+    const db = load();
+    db.alert.enabled = document.getElementById("admAlertEnabled").checked;
+    db.alert.style = document.getElementById("admAlertStyle").value;
+    db.alert.text = document.getElementById("admAlertText").value.trim();
+    save(db);
+    renderAdmin();
+    showToast("Alert banner updated!");
   });
 
-  // Save Hero Section
   document.getElementById("saveHeroBtn").addEventListener("click", function () {
-    const cms = load();
-    cms.hero.badge = document.getElementById("admHeroBadge").value.trim();
-    cms.hero.title = document.getElementById("admHeroTitle").value.trim();
-    cms.hero.desc = document.getElementById("admHeroDesc").value.trim();
-    cms.hero.cta = document.getElementById("admHeroCta").value.trim();
-    save(cms);
-    renderAdminPage();
-    showToast("Homepage Hero updated live!");
+    const db = load();
+    db.hero.badge = document.getElementById("admHeroBadge").value.trim();
+    db.hero.title = document.getElementById("admHeroTitle").value.trim();
+    db.hero.desc = document.getElementById("admHeroDesc").value.trim();
+    db.hero.cta = document.getElementById("admHeroCta").value.trim();
+    save(db);
+    renderAdmin();
+    showToast("Homepage Hero updated!");
   });
 
-  // Preset Interesting Info Buttons
+  document.getElementById("saveContactBtn").addEventListener("click", function () {
+    const db = load();
+    db.contact.domain = document.getElementById("admDomain").value.trim();
+    db.contact.email = document.getElementById("admEmail").value.trim();
+    db.contact.phone = document.getElementById("admPhone").value.trim();
+    db.contact.address = document.getElementById("admAddress").value.trim();
+    save(db);
+    renderAdmin();
+    showToast("Contact settings saved!");
+  });
+
   document.querySelectorAll(".preset-insight-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
       const p = INSIGHT_PRESETS[this.dataset.preset];
@@ -223,46 +289,37 @@
     });
   });
 
-  // Publish Interesting Information
   document.getElementById("addInsightForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    const cms = load();
-    cms.insights.unshift({
+    const db = load();
+    db.insights.unshift({
       id: "i" + Date.now(),
       tag: document.getElementById("insTag").value.trim(),
       title: document.getElementById("insTitle").value.trim(),
       body: document.getElementById("insBody").value.trim()
     });
-    save(cms);
-    renderAdminPage();
+    save(db);
+    renderAdmin();
     e.target.reset();
-    showToast("New Interesting Info published to website!");
+    showToast("Insight article published!");
   });
 
-  // Save Rates
   document.getElementById("saveRatesBtn").addEventListener("click", function () {
-    const cms = load();
-    cms.rates.usdJpy = document.getElementById("admUsdJpy").value.trim();
-    cms.rates.eurJpy = document.getElementById("admEurJpy").value.trim();
-    cms.rates.timeRate = document.getElementById("admTimeRate").value.trim();
-    cms.rates.loanRate = document.getElementById("admLoanRate").value.trim();
-    save(cms);
-    renderAdminPage();
-    showToast("Live rates updated across website!");
+    const db = load();
+    db.rates.usdJpy = document.getElementById("admUsdJpy").value.trim();
+    db.rates.eurJpy = document.getElementById("admEurJpy").value.trim();
+    db.rates.timeRate = document.getElementById("admTimeRate").value.trim();
+    db.rates.loanRate = document.getElementById("admLoanRate").value.trim();
+    save(db);
+    renderAdmin();
+    showToast("Rates updated live!");
   });
 
-  // Reset Defaults
   document.getElementById("resetDefaultsBtn").addEventListener("click", function () {
     reset();
-    renderAdminPage();
-    showToast("All website content restored to Hyakugo defaults.");
+    renderAdmin();
+    showToast("Restored to default Crimson Horizon Bank settings.");
   });
 
-  // Open specific tab if linked via URL hash (e.g. admin.html#insights)
-  const hashTab = window.location.hash.replace("#", "");
-  if (hashTab) {
-    openAdminTab(hashTab);
-  }
-
-  renderAdminPage();
+  checkGate();
 })();
