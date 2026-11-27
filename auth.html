@@ -6,7 +6,7 @@
   <title>Enroll &amp; Online Banking Login | Crimson Horizon Bank</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css?v=3" />
   <style>
     .enroll-shell {
       max-width: 680px;
@@ -101,12 +101,10 @@
 </head>
 <body>
 
-  <!-- Live Admin-Controlled Alert Banner -->
   <div id="liveAlertBar" class="live-alert-bar alert-info">
     <span id="liveAlertText"></span>
   </div>
 
-  <!-- Clean Customer Header -->
   <header class="bank-header">
     <div class="header-inner">
       <a href="index.html" class="brand-lockup">
@@ -136,9 +134,7 @@
         <button type="button" class="auth-tab-btn" id="tabSignupBtn">Enroll in Online Banking</button>
       </div>
 
-      <!-- =====================================
-           PANEL 1: ONLINE BANKING LOGIN
-           ===================================== -->
+      <!-- PANEL 1: LOGIN -->
       <div id="loginPanel">
         <h2 style="font-size:1.4rem; margin-bottom:0.25rem;">Welcome Back</h2>
         <p style="font-size:0.86rem; color:var(--muted); margin-bottom:1.35rem;">
@@ -170,16 +166,13 @@
         </form>
       </div>
 
-      <!-- =====================================
-           PANEL 2: HORIZON-STYLE 4-STEP ENROLLMENT
-           ===================================== -->
+      <!-- PANEL 2: 4-STEP HORIZON ENROLLMENT -->
       <div id="signupPanel" style="display:none;">
         <div style="margin-bottom:1rem;">
           <h2 style="font-size:1.4rem; margin-bottom:0.2rem;">Enroll in Online Banking</h2>
-          <p style="font-size:0.85rem; color:var(--muted);">Complete the 4-step verification below to open and activate your account.</p>
+          <p style="font-size:0.85rem; color:var(--muted);">Complete the 4 steps below to open and activate your account.</p>
         </div>
 
-        <!-- 4-Step Progress Bar -->
         <div class="stepper">
           <div class="step-pill active" id="pillStep1">1. Account Info</div>
           <div class="step-pill" id="pillStep2">2. Access Code</div>
@@ -187,7 +180,7 @@
           <div class="step-pill" id="pillStep4">4. Confirmed</div>
         </div>
 
-        <!-- ENROLL STEP 1: ACCOUNT & PROFILE -->
+        <!-- STEP 1 -->
         <form id="enrollStep1Form" class="enroll-step active">
           <div class="form-group">
             <label>Select Account Category</label>
@@ -206,7 +199,7 @@
           <div class="form-group">
             <label for="regPlan">Choose Checking Plan</label>
             <select id="regPlan">
-              <option value="Everyday Checking">Everyday Checking (¥0 Monthly Fee)</option>
+              <option value="Everyday Checking (¥0 Monthly Fee)">Everyday Checking (¥0 Monthly Fee)</option>
               <option value="Relationship Checking">Relationship Checking</option>
               <option value="Student Checking">Student Checking</option>
               <option value="Fresh Start Checking">Fresh Start Checking</option>
@@ -230,8 +223,8 @@
               <input type="email" id="regEmail" placeholder="kenji@example.com" required />
             </div>
             <div class="form-group">
-              <label for="regIdLast4">ID / Tax Ref (Last 4 Digits)</label>
-              <input type="text" id="regIdLast4" maxlength="4" pattern="[0-9]{4}" placeholder="e.g. 4821" required />
+              <label for="regIdLast4">ID / Reference (Optional)</label>
+              <input type="text" id="regIdLast4" maxlength="10" placeholder="e.g. 4821" />
             </div>
           </div>
 
@@ -239,11 +232,11 @@
           <button type="submit" class="btn-forest" style="width:100%;">Continue to Secure Access Code →</button>
         </form>
 
-        <!-- ENROLL STEP 2: SECURE ACCESS CODE -->
+        <!-- STEP 2 -->
         <div id="enrollStep2Box" class="enroll-step">
           <h3 style="font-size:1.1rem; margin-bottom:0.35rem;">Select Secure Access Code Delivery Method</h3>
           <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">
-            To protect your identity, select how you would like to receive your one-time 6-digit Secure Access Code.
+            Choose how you would like to receive your one-time 6-digit Secure Access Code.
           </p>
 
           <div class="form-group">
@@ -273,7 +266,7 @@
           </form>
         </div>
 
-        <!-- ENROLL STEP 3: PROFILE REVIEW, PASSWORD, DEVICE & E-STATEMENTS -->
+        <!-- STEP 3 -->
         <form id="enrollStep3Form" class="enroll-step">
           <h3 style="font-size:1.1rem; margin-bottom:0.65rem;">Confirm Profile &amp; Set Password</h3>
           <div class="profile-preview" id="profilePreviewBox"></div>
@@ -293,7 +286,7 @@
           </div>
 
           <label class="check-row">
-            <input type="checkbox" id="chkTerms" required />
+            <input type="checkbox" id="chkTerms" checked required />
             <span>I accept the <strong>Online Banking Terms of Service</strong> and Electronic Disclosures.</span>
           </label>
           <label class="check-row">
@@ -313,7 +306,7 @@
           </div>
         </form>
 
-        <!-- ENROLL STEP 4: CONFIRMATION & LAUNCH -->
+        <!-- STEP 4 -->
         <div id="enrollStep4Box" class="enroll-step" style="text-align:center;">
           <div style="width:56px; height:56px; border-radius:50%; background:var(--forest-soft); color:var(--forest); display:grid; place-items:center; font-size:1.75rem; margin:0 auto 1rem;">✓</div>
           <h3 style="font-size:1.35rem; margin-bottom:0.4rem;">Online Banking Enrollment Complete!</h3>
@@ -338,7 +331,7 @@
 
   <div id="toast">Notification</div>
 
-  <script src="js/store.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/store.js?v=3"></script>
+  <script src="js/auth.js?v=3"></script>
 </body>
 </html>
