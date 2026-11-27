@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Dashboard | Crimson Horizon Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Live Admin-Controlled Alert Banner -->
+  <div id="liveAlertBar" class="live-alert-bar alert-info">
+    <span id="liveAlertText"></span>
+  </div>
+
+  <div class="dash-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="dash-sidebar">
+      <div>
+        <a href="index.html" class="brand-lockup" style="margin-bottom:2rem;">
+          <div class="brand-mark">CHB</div>
+          <div>
+            <div class="brand-sub" style="color:#94a3b8;">Online Banking</div>
+            <div class="brand-name" style="color:#ffffff; font-size:1.05rem;">Crimson Horizon</div>
+          </div>
+        </a>
+
+        <button type="button" class="dash-nav-btn active" data-dashtab="overview">🏦 Overview</button>
+        <button type="button" class="dash-nav-btn" data-dashtab="cards">💳 3D Horizon Card</button>
+        <button type="button" class="dash-nav-btn" data-dashtab="transfers">🔄 Transfers &amp; History</button>
+        <button type="button" class="dash-nav-btn" data-dashtab="goals">🎯 Savings Goals</button>
+        <button type="button" class="dash-nav-btn" data-dashtab="profile">👤 Profile &amp; Support</button>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:1rem; display:flex; flex-direction:column; gap:0.5rem;">
+        <a href="index.html" class="dash-nav-btn" style="text-decoration:none;">← Public Website</a>
+        <button type="button" class="dash-nav-btn" id="dashLogoutBtn" style="color:#fda4af;">🚪 Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main Dashboard Workspace -->
+    <main class="dash-main">
+      <!-- Top Bar -->
+      <div class="dash-topbar">
+        <div>
+          <h1 id="dashGreeting" style="font-size:1.55rem; font-weight:800;">Welcome back</h1>
+          <span style="font-size:0.84rem; color:var(--muted);">
+            Account No: <strong id="dashAccountNum" style="color:var(--navy);"></strong> • Status: <span style="color:var(--emerald); font-weight:700;">Active</span>
+          </span>
+        </div>
+
+        <div style="display:flex; gap:0.65rem; flex-wrap:wrap; align-items:center;">
+          <div style="background:var(--surface); border:1px solid var(--border); padding:0.45rem 0.9rem; border-radius:10px;">
+            <span style="font-size:0.74rem; color:var(--muted); display:block;">Total Net Worth</span>
+            <strong id="totalPortfolioBal" style="font-size:1.15rem;">¥0</strong>
+          </div>
+          <button type="button" class="btn-outline" id="dashPrivacyBtn">👁️ Hide Balances</button>
+        </div>
+      </div>
+
+      <!-- TAB 1: OVERVIEW -->
+      <section id="dashtab-overview" class="dash-tab active">
+        <div class="grid-3" style="margin-bottom:1.5rem;">
+          <div class="card card-3d-hover">
+            <span class="tag tag-red">Checking Account</span>
+            <div style="font-size:0.8rem; color:var(--muted);">Ordinary Deposit (JPY)</div>
+            <div id="balChecking" style="font-size:1.75rem; font-weight:800; margin:0.3rem 0;">¥0</div>
+            <div style="font-size:0.78rem; color:var(--emerald); font-weight:700;">Instant Transfers Ready</div>
+          </div>
+
+          <div class="card card-3d-hover">
+            <span class="tag tag-green">High-Yield Savings</span>
+            <div style="font-size:0.8rem; color:var(--muted);">Time Deposit Vault</div>
+            <div id="balSavings" style="font-size:1.75rem; font-weight:800; margin:0.3rem 0;">¥0</div>
+            <div style="font-size:0.78rem; color:var(--slate);">Annual Yield: <strong id="dashTimeRate">0.45%</strong></div>
+          </div>
+
+          <div class="card card-3d-hover">
+            <span class="tag tag-blue">Global &amp; NISA Vault</span>
+            <div style="font-size:0.8rem; color:var(--muted);">Multi-Currency &amp; Funds</div>
+            <div id="balVault" style="font-size:1.75rem; font-weight:800; margin:0.3rem 0;">¥0</div>
+            <div style="font-size:0.78rem; color:var(--emerald); font-weight:700;">FX &amp; Growth Active</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Left: Recent Activity + Goal Snapshot -->
+          <div style="display:flex; flex-direction:column; gap:1.5rem;">
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem;">
+                <h3>Recent Transactions</h3>
+                <button type="button" class="btn-outline" onclick="document.querySelector('[data-dashtab=transfers]').click()">View All →</button>
+              </div>
+              <div id="recentLedgerList"></div>
+            </div>
+
+            <div class="card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <h3 id="goalNameOverview">Savings Goal</h3>
+                <span id="goalProgressText" style="font-size:0.84rem; font-weight:700; color:var(--crimson);">0%</span>
+              </div>
+              <div class="bar-track">
+                <div id="goalBarOverview" class="bar-fill" style="width:0%; background:var(--crimson);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Quick Transfer -->
+          <div class="card">
+            <h3 style="margin-bottom:0.9rem;">Quick Money Transfer</h3>
+            <form id="dashQuickTransferForm">
+              <div class="form-group">
+                <label for="qtFromAcc">From Account</label>
+                <select id="qtFromAcc">
+                  <option value="checking">Ordinary Checking</option>
+                  <option value="savings">High-Yield Savings</option>
+                  <option value="vault">Global Vault</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="qtRecipient">Recipient Name or Email</label>
+                <input type="text" id="qtRecipient" placeholder="e.g. Tanaka Taro or vendor@shop.jp" required />
+              </div>
+              <div class="form-group">
+                <label for="qtAmount">Amount (¥ JPY)</label>
+                <input type="number" id="qtAmount" min="100" step="100" placeholder="10000" required />
+              </div>
+              <button type="submit" class="btn" style="width:100%;">⚡ Send Instant Transfer</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: 3D HORIZON CARD -->
+      <section id="dashtab-cards" class="dash-tab">
+        <div class="grid-2">
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3>Interactive 3D Horizon Card</h3>
+              <span style="font-size:0.76rem; color:var(--muted);">Hover to tilt in 3D</span>
+            </div>
+
+            <div class="card-stage">
+              <div class="card-3d-tilt" id="dCardTilt">
+                <div class="card-3d-inner" id="dCardInner">
+                  <!-- Front -->
+                  <div class="card-face">
+                    <div class="frozen-mask">❄️ CARD LOCKED</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div class="card-chip"></div>
+                      <strong style="letter-spacing:0.06em;">CRIMSON HORIZON</strong>
+                    </div>
+                    <div id="dCardNumber" style="font-size:1.1rem; letter-spacing:0.14em; font-weight:700;">
+                      4892  ••••  ••••  4821
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.76rem;">
+                      <span id="dCardHolder">ACCOUNT HOLDER</span>
+                      <span>VALID THRU 09/29</span>
+                    </div>
+                  </div>
+
+                  <!-- Back -->
+                  <div class="card-face card-back">
+                    <div class="frozen-mask">❄️ CARD LOCKED</div>
+                    <div style="height:36px; background:#020617; margin:0.2rem -1.35rem;"></div>
+                    <div style="background:#fff; color:#0f172a; padding:0.4rem 0.7rem; border-radius:6px; font-weight:800; font-size:0.85rem; display:flex; justify-content:space-between;">
+                      <span>Horizon Security</span>
+                      <span>CVV: 842</span>
+                    </div>
+                    <div style="font-size:0.7rem; color:#cbd5e1;">
+                      Crimson Horizon Bank • Instant Freeze &amp; 3DS Active
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+              <button type="button" class="btn-outline" id="dFlipBtn">🔄 Flip 3D Card</button>
+              <button type="button" class="btn-outline" id="dRevealBtn">👁️ Reveal Digits</button>
+              <button type="button" class="btn-outline" id="dFreezeBtn">❄️ Lock / Freeze</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:0.75rem;">Card Controls &amp; Single-Use Virtual Card</h3>
+            <div class="form-group">
+              <label>Monthly Spending Limit: <strong id="cardLimitValue" style="color:var(--crimson);">¥300,000</strong></label>
+              <input type="range" id="cardLimitSlider" min="50000" max="2000000" step="50000" value="300000" style="padding:0;" />
+            </div>
+
+            <div style="background:var(--bg); border:1px dashed var(--crimson); border-radius:12px; padding:1.25rem; text-align:center; margin:1.25rem 0;">
+              <span style="font-size:0.74rem; color:var(--muted); display:block; margin-bottom:0.35rem;">DISPOSABLE ONLINE SHOPPING CARD</span>
+              <div id="virtualCardBox" style="font-size:1.1rem; font-weight:800; letter-spacing:0.08em; color:var(--navy);">
+                Click generate below
+              </div>
+            </div>
+
+            <button type="button" class="btn" id="genVirtualBtn" style="width:100%;">⚡ Generate Single-Use Virtual Card</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: TRANSFERS & FULL LEDGER -->
+      <section id="dashtab-transfers" class="dash-tab">
+        <div class="grid-2">
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+              <h3>Full Transaction Statement</h3>
+              <input type="text" id="txSearchInput" placeholder="Search statement..." style="width:190px;" />
+            </div>
+            <div id="fullLedgerList"></div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Internal Move or External Wire</h3>
+            <form id="fullTransferForm">
+              <div class="form-group">
+                <label for="ftFrom">Source Account</label>
+                <select id="ftFrom">
+                  <option value="checking">Ordinary Checking</option>
+                  <option value="savings">High-Yield Savings</option>
+                  <option value="vault">Global Vault</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ftTo">Destination</label>
+                <select id="ftTo">
+                  <option value="external">External Bank / Recipient</option>
+                  <option value="savings">Move to High-Yield Savings</option>
+                  <option value="vault">Move to Global Vault</option>
+                  <option value="checking">Move to Ordinary Checking</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ftNote">Recipient / Reference Note</label>
+                <input type="text" id="ftNote" placeholder="e.g. Monthly Rent or Vault Top-up" required />
+              </div>
+              <div class="form-group">
+                <label for="ftAmount">Amount (¥ JPY)</label>
+                <input type="number" id="ftAmount" min="100" step="100" placeholder="25000" required />
+              </div>
+              <button type="submit" class="btn" style="width:100%;">Execute Transfer</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: SAVINGS GOALS -->
+      <section id="dashtab-goals" class="dash-tab">
+        <div class="grid-2">
+          <div class="card">
+            <span class="tag tag-green">Active Goal</span>
+            <h3 id="goalCardTitle" style="margin-bottom:0.4rem;">Savings Goal</h3>
+            <p id="goalCardNumbers" style="color:var(--slate); font-weight:700; margin-bottom:0.75rem;"></p>
+            <div class="bar-track" style="height:12px; margin-bottom:1.5rem;">
+              <div id="goalCardBar" class="bar-fill" style="width:0%; background:var(--emerald);"></div>
+            </div>
+
+            <form id="goalTopupForm">
+              <div class="form-group">
+                <label for="goalTopupAmount">Contribute from Checking Account (¥ JPY)</label>
+                <input type="number" id="goalTopupAmount" min="1000" step="1000" placeholder="20000" required />
+              </div>
+              <button type="submit" class="btn" style="width:100%;">+ Fund Savings Goal</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Customize Your Savings Goal</h3>
+            <form id="goalUpdateForm">
+              <div class="form-group">
+                <label for="goalEditName">Goal Name</label>
+                <input type="text" id="goalEditName" required />
+              </div>
+              <div class="form-group">
+                <label for="goalEditTarget">Target Amount (¥ JPY)</label>
+                <input type="number" id="goalEditTarget" min="10000" step="10000" required />
+              </div>
+              <button type="submit" class="btn-outline" style="width:100%;">Save Goal Settings</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: PROFILE & SUPPORT -->
+      <section id="dashtab-profile" class="dash-tab">
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Customer Profile</h3>
+            <form id="profileForm">
+              <div class="form-group">
+                <label for="profAccNum">Account Number</label>
+                <input type="text" id="profAccNum" disabled />
+              </div>
+              <div class="form-group">
+                <label for="profName">Full Name</label>
+                <input type="text" id="profName" required />
+              </div>
+              <div class="form-group">
+                <label for="profEmail">Email Address</label>
+                <input type="email" id="profEmail" disabled />
+              </div>
+              <div class="form-group">
+                <label for="profPhone">Mobile Phone</label>
+                <input type="tel" id="profPhone" required />
+              </div>
+              <button type="submit" class="btn">Update Profile Details</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <span class="tag tag-red">24/7 Support Desk</span>
+            <h3 style="margin-bottom:0.65rem;">Need Assistance?</h3>
+            <p style="font-size:0.9rem; color:var(--slate); margin-bottom:1rem;">
+              Contact Crimson Horizon Bank support anytime regarding transfers, card security, or account settings.
+            </p>
+            <p style="margin-bottom:0.5rem;"><strong>Email:</strong> <span id="dashSupportEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="dashSupportPhone"></span></p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast">Updated!</div>
+
+  <script src="js/store.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
