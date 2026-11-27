@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Control Center | Crimson Horizon Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=4" />
+</head>
+<body>
+
+  <!-- ADMIN PASSWORD GATE -->
+  <div id="adminGate" class="admin-gate">
+    <div class="admin-gate-card">
+      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem;">
+        <div class="brand-mark">CHB</div>
+        <div>
+          <div class="brand-sub">Restricted Area</div>
+          <div class="brand-name" style="font-size:1.1rem;">Horizon Admin Login</div>
+        </div>
+      </div>
+      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:1.25rem;">
+        Enter administrator credentials to control website content, templates, service status, and customer accounts.
+      </p>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="admUser">Admin Username</label>
+          <input type="text" id="admUser" placeholder="admin" required />
+        </div>
+        <div class="form-group">
+          <label for="admPass">Admin Passcode</label>
+          <input type="password" id="admPass" placeholder="••••••••" required />
+        </div>
+        <p id="admGateError" style="display:none; color:var(--crimson); font-size:0.82rem; font-weight:700; margin-bottom:0.85rem;"></p>
+        <button type="submit" class="btn-forest" style="width:100%; margin-bottom:0.75rem;">Unlock Admin Panel →</button>
+        <a href="index.html" class="btn-outline" style="width:100%;">← Return to Public Website</a>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN WORKSPACE -->
+  <div id="adminWorkspace" style="display:none;">
+    <div id="liveAlertBar" class="live-alert-bar alert-info">
+      <span id="liveAlertText"></span>
+    </div>
+
+    <header class="bank-header">
+      <div class="header-inner">
+        <a href="index.html" class="brand-lockup">
+          <div class="brand-mark">CHB</div>
+          <div>
+            <div class="brand-sub">Crimson Horizon Bank • CMS</div>
+            <div class="brand-name">Admin Control Center</div>
+          </div>
+        </a>
+
+        <nav class="main-nav">
+          <a href="index.html" target="_blank" class="btn-outline">↗ View Public Site</a>
+          <button type="button" class="btn-outline" id="resetDefaultsBtn">↺ Reset Defaults</button>
+          <button type="button" class="btn" id="adminLockBtn">🔒 Lock Admin</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="sec-head">
+        <div>
+          <span class="tag tag-amber">Private Administrator Panel</span>
+          <h2>Website &amp; Banking Settings</h2>
+        </div>
+        <span style="font-size:0.84rem; color:var(--muted);">Separate from public website • Changes sync live</span>
+      </div>
+
+      <div class="admin-layout">
+        <aside class="admin-sidebar">
+          <div style="font-size:0.74rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.8rem;">
+            Control Modules
+          </div>
+          <button type="button" class="admin-nav-btn active" data-admintab="templates">📋 Message Templates</button>
+          <button type="button" class="admin-nav-btn" data-admintab="status">🟢 Service Status</button>
+          <button type="button" class="admin-nav-btn" data-admintab="banner">🎨 Hero &amp; Alert Bar</button>
+          <button type="button" class="admin-nav-btn" data-admintab="insights">💡 Sensible Advice / Info</button>
+          <button type="button" class="admin-nav-btn" data-admintab="rates">📈 Market &amp; Rates</button>
+          <button type="button" class="admin-nav-btn" data-admintab="customers">👥 Customer Accounts</button>
+          <button type="button" class="admin-nav-btn" data-admintab="settings">⚙️ Contact &amp; Security</button>
+        </aside>
+
+        <div>
+          <!-- TAB 1: MESSAGE TEMPLATES & NOTICES -->
+          <div id="admintab-templates" class="admin-panel-tab active">
+            <div class="card" style="margin-bottom:1.5rem;">
+              <h3 style="margin-bottom:0.4rem;">Banking Message Templates</h3>
+              <p style="font-size:0.86rem; color:var(--muted); margin-bottom:1.25rem;">
+                Push any template to the <strong>Top Alert Banner</strong> or publish it to the homepage <strong>News &amp; Notices</strong> feed.
+              </p>
+              <div id="templatesLibraryList"></div>
+            </div>
+
+            <div class="card" style="margin-bottom:1.5rem;">
+              <h3 style="margin-bottom:1rem;">Create &amp; Save Custom Template</h3>
+              <form id="customTemplateForm">
+                <div class="grid-2" style="gap:1rem;">
+                  <div class="form-group">
+                    <label for="tplTitle">Template Title</label>
+                    <input type="text" id="tplTitle" placeholder="e.g. Weekend System Check" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="tplType">Severity / Style</label>
+                    <select id="tplType">
+                      <option value="info">Notice (Blue)</option>
+                      <option value="warning">Maintenance / Caution (Amber)</option>
+                      <option value="danger">Security Warning (Red)</option>
+                      <option value="campaign">Campaign / Promo (Green)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="tplBody">Message Body</label>
+                  <textarea id="tplBody" rows="3" placeholder="Write the announcement message..." required></textarea>
+                </div>
+                <button type="submit" class="btn-forest">Save Template</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-bottom:1rem;">Active Notices Displayed on Website</h3>
+              <div id="adminNoticesList"></div>
+            </div>
+          </div>
+
+          <!-- TAB 2: SERVICE STATUS -->
+          <div id="admintab-status" class="admin-panel-tab">
+            <div class="card">
+              <h3 style="margin-bottom:0.4rem;">Live Service &amp; Channel Status Controls</h3>
+              <p style="font-size:0.86rem; color:var(--muted); margin-bottom:1.25rem;">
+                Update what visitors see in the <strong>Live Service &amp; Channel Status</strong> bar on the homepage.
+              </p>
+              <div id="adminStatusList"></div>
+              <button type="button" class="btn-forest" id="saveStatusBtn" style="margin-top:0.5rem;">Save Service Status</button>
+            </div>
+          </div>
+
+          <!-- TAB 3: HERO & ALERT CONTROL -->
+          <div id="admintab-banner" class="admin-panel-tab">
+            <div class="card" style="margin-bottom:1.5rem;">
+              <h3 style="margin-bottom:1rem;">Top Alert Banner Control</h3>
+              <div class="form-group">
+                <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;">
+                  <input type="checkbox" id="admAlertEnabled" style="width:auto;" />
+                  <span>Show Top Alert Banner across Website</span>
+                </label>
+              </div>
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group">
+                  <label for="admAlertStyle">Banner Style</label>
+                  <select id="admAlertStyle">
+                    <option value="alert-info">Notice (Blue)</option>
+                    <option value="alert-warning">Maintenance (Amber)</option>
+                    <option value="alert-danger">Security Warning (Red)</option>
+                    <option value="alert-campaign">Promotion (Green)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="admAlertText">Banner Message</label>
+                  <input type="text" id="admAlertText" />
+                </div>
+              </div>
+              <button type="button" class="btn-forest" id="saveAlertBtn">Update Top Alert Banner</button>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-bottom:1rem;">Homepage Hero Section</h3>
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group"><label for="admHeroEyebrow">Eyebrow Text</label><input type="text" id="admHeroEyebrow" /></div>
+                <div class="form-group"><label for="admHeroBadge">Top Badge</label><input type="text" id="admHeroBadge" /></div>
+              </div>
+              <div class="form-group"><label for="admHeroTitle">Headline</label><input type="text" id="admHeroTitle" /></div>
+              <div class="form-group"><label for="admHeroDesc">Description</label><textarea id="admHeroDesc" rows="3"></textarea></div>
+              <div class="form-group"><label for="admHeroCta">Primary Button Text</label><input type="text" id="admHeroCta" /></div>
+              <button type="button" class="btn-forest" id="saveHeroBtn">Update Hero Content</button>
+            </div>
+          </div>
+
+          <!-- TAB 4: INTERESTING INFORMATION / SENSIBLE ADVICE -->
+          <div id="admintab-insights" class="admin-panel-tab">
+            <div class="card" style="margin-bottom:1.5rem;">
+              <h3 style="margin-bottom:0.4rem;">Publish Advice / Interesting Information</h3>
+              <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">
+                Articles appear in the <strong>Sensible Advice You Can Count On</strong> section with automatic category filters.
+              </p>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+                <button type="button" class="btn-outline preset-insight-btn" data-preset="compound">+ Personal Finance Tip</button>
+                <button type="button" class="btn-outline preset-insight-btn" data-preset="phishing">+ Security Center Guide</button>
+                <button type="button" class="btn-outline preset-insight-btn" data-preset="retirement">+ Investments &amp; Retirement</button>
+              </div>
+              <form id="addInsightForm">
+                <div class="grid-2" style="gap:1rem;">
+                  <div class="form-group"><label for="insTag">Category Tag</label><input type="text" id="insTag" placeholder="e.g. Personal Finance" required /></div>
+                  <div class="form-group"><label for="insTitle">Title</label><input type="text" id="insTitle" placeholder="Article headline..." required /></div>
+                </div>
+                <div class="form-group"><label for="insBody">Summary Text</label><textarea id="insBody" rows="3" placeholder="Write helpful information..." required></textarea></div>
+                <button type="submit" class="btn-forest">Publish to Website</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-bottom:1rem;">Published Articles</h3>
+              <div id="adminInsightsList"></div>
+            </div>
+          </div>
+
+          <!-- TAB 5: MARKET & RATES -->
+          <div id="admintab-rates" class="admin-panel-tab">
+            <div class="card">
+              <h3 style="margin-bottom:1rem;">Live Market &amp; Interest Rates</h3>
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group"><label for="admUsdJpy">USD / JPY Rate</label><input type="text" id="admUsdJpy" /></div>
+                <div class="form-group"><label for="admEurJpy">EUR / JPY Rate</label><input type="text" id="admEurJpy" /></div>
+                <div class="form-group"><label for="admTimeRate">1-Year Time Deposit APY</label><input type="text" id="admTimeRate" /></div>
+                <div class="form-group"><label for="admLoanRate">Housing Loan Variable Rate</label><input type="text" id="admLoanRate" /></div>
+              </div>
+              <button type="button" class="btn-forest" id="saveRatesBtn">Update Live Rates</button>
+            </div>
+          </div>
+
+          <!-- TAB 6: CUSTOMER ACCOUNTS -->
+          <div id="admintab-customers" class="admin-panel-tab">
+            <div class="card">
+              <h3 style="margin-bottom:0.4rem;">Registered Customer Accounts</h3>
+              <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.25rem;">
+                Manage customers registered via <strong>auth.html</strong>: credit demo funds, suspend/activate, or delete accounts.
+              </p>
+              <div id="adminCustomersList"></div>
+            </div>
+          </div>
+
+          <!-- TAB 7: BANK CONTACT & ADMIN SECURITY -->
+          <div id="admintab-settings" class="admin-panel-tab">
+            <div class="card" style="margin-bottom:1.5rem;">
+              <h3 style="margin-bottom:1rem;">Bank Domain, Email &amp; Contact Settings</h3>
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group"><label for="admDomain">Website Domain</label><input type="text" id="admDomain" /></div>
+                <div class="form-group"><label for="admEmail">Support Email Address</label><input type="email" id="admEmail" /></div>
+                <div class="form-group"><label for="admPhone">Support Phone Number</label><input type="tel" id="admPhone" /></div>
+                <div class="form-group"><label for="admAddress">Office Address</label><input type="text" id="admAddress" /></div>
+              </div>
+              <button type="button" class="btn-forest" id="saveContactBtn">Save Contact Settings</button>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-bottom:1rem;">Admin Login Credentials</h3>
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group"><label for="admNewUser">Admin Username</label><input type="text" id="admNewUser" /></div>
+                <div class="form-group"><label for="admNewPass">Admin Passcode</label><input type="text" id="admNewPass" /></div>
+              </div>
+              <button type="button" class="btn" id="saveAdminCredsBtn">Update Admin Credentials</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast">Updated!</div>
+
+  <script src="js/store.js?v=4"></script>
+  <script>
+    (function () {
+      const { load, save, reset, isAdminUnlocked, setAdminUnlocked, escapeHtml, formatJPY, renderAlertBar, showToast } = window.HorizonStore;
+
+      const TAG_MAP = {
+        info: { label: "Notice", cls: "tag-blue", alert: "alert-info" },
+        warning: { label: "Maintenance", cls: "tag-amber", alert: "alert-warning" },
+        danger: { label: "Security", cls: "tag-red", alert: "alert-danger" },
+        campaign: { label: "Campaign", cls: "tag-green", alert: "alert-campaign" }
+      };
+
+      const INSIGHT_PRESETS = {
+        compound: { tag: "Personal Finance", title: "Easy Save: Build Wealth One Round-Up at a Time", body: "Automatic round-ups move spare change from Everyday Checking into Personal Savings without changing your daily routine." },
+        phishing: { tag: "Security Center", title: "How 2-Step Verification Keeps Fraudsters Out", body: "Always verify you are on our official domain and never share one-time Secure Access Codes with anyone by phone or email." },
+        retirement: { tag: "Investments and Retirements", title: "Planning Ahead With IRAs & Balanced Portfolios", body: "Combining steady savings yields with diversified long-term retirement plans helps protect purchasing power over decades." }
+      };
+
+      function checkGate() {
+        const unlocked = isAdminUnlocked();
+        document.getElementById("adminGate").style.display = unlocked ? "none" : "grid";
+        document.getElementById("adminWorkspace").style.display = unlocked ? "block" : "none";
+        if (unlocked) renderAdmin();
+      }
+
+      document.getElementById("adminLoginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const db = load();
+        const errEl = document.getElementById("admGateError");
+        if (document.getElementById("admUser").value.trim() === db.adminCredentials.username &&
+            document.getElementById("admPass").value === db.adminCredentials.passcode) {
+          errEl.style.display = "none";
+          setAdminUnlocked(true);
+          checkGate();
+          showToast("Admin workspace unlocked.");
+        } else {
+          errEl.textContent = "Invalid admin username or passcode.";
+          errEl.style.display = "block";
+        }
+      });
+
+      document.getElementById("adminLockBtn").addEventListener("click", function () {
+        setAdminUnlocked(false);
+        checkGate();
+      });
+
+      document.querySelectorAll(".admin-nav-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".admin-panel-tab").forEach((t) => t.classList.remove("active"));
+          document.querySelectorAll(".admin-nav-btn").forEach((b) => b.classList.remove("active"));
+          document.getElementById("admintab-" + this.dataset.admintab).classList.add("active");
+          this.classList.add("active");
+        });
+      });
+
+      function renderAdmin() {
+        const db = load();
+        renderAlertBar(db);
+
+        document.getElementById("admAlertEnabled").checked = db.alert.enabled;
+        document.getElementById("admAlertStyle").value = db.alert.style;
+        document.getElementById("admAlertText").value = db.alert.text;
+
+        document.getElementById("admHeroEyebrow").value = db.hero.eyebrow || "";
+        document.getElementById("admHeroBadge").value = db.hero.badge;
+        document.getElementById("admHeroTitle").value = db.hero.title;
+        document.getElementById("admHeroDesc").value = db.hero.desc;
+        document.getElementById("admHeroCta").value = db.hero.cta;
+
+        document.getElementById("admDomain").value = db.contact.domain;
+        document.getElementById("admEmail").value = db.contact.email;
+        document.getElementById("admPhone").value = db.contact.phone;
+        document.getElementById("admAddress").value = db.contact.address;
+        document.getElementById("admNewUser").value = db.adminCredentials.username;
+        document.getElementById("admNewPass").value = db.adminCredentials.passcode;
+
+        document.getElementById("admUsdJpy").value = db.rates.usdJpy;
+        document.getElementById("admEurJpy").value = db.rates.eurJpy;
+        document.getElementById("admTimeRate").value = db.rates.timeRate;
+        document.getElementById("admLoanRate").value = db.rates.loanRate;
+
+        // Service Status Editor
+        document.getElementById("adminStatusList").innerHTML = db.serviceStatus.map((s, idx) => `
+          <div class="template-card grid-2" style="gap:0.85rem; align-items:end;">
+            <div class="form-group" style="margin:0;">
+              <label>${escapeHtml(s.name)} — Note</label>
+              <input type="text" class="st-sub" data-sidx="${idx}" value="${escapeHtml(s.sub)}" />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Channel Status</label>
+              <select class="st-val" data-sidx="${idx}">
+                <option value="Operational" ${s.status === "Operational" ? "selected" : ""}>Operational (Green)</option>
+                <option value="Maintenance" ${s.status === "Maintenance" ? "selected" : ""}>Maintenance (Amber)</option>
+                <option value="Limited" ${s.status === "Limited" ? "selected" : ""}>Limited / Notice (Amber)</option>
+              </select>
+            </div>
+          </div>
+        `).join("");
+
+        // Templates
+        document.getElementById("templatesLibraryList").innerHTML = db.templates.map((t, idx) => {
+          const meta = TAG_MAP[t.type] || TAG_MAP.info;
+          return `
+            <div class="template-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.45rem;">
+                <div><span class="tag ${meta.cls}" style="margin:0 0.4rem 0 0;">${meta.label}</span><strong>${escapeHtml(t.title)}</strong></div>
+                <div style="display:flex; gap:0.45rem; flex-wrap:wrap;">
+                  <button type="button" class="btn-dark" data-action="push-alert" data-index="${idx}">Push to Top Alert</button>
+                  <button type="button" class="btn-outline" data-action="push-notice" data-index="${idx}">+ Add to Notices</button>
+                  <button type="button" class="btn-outline" data-action="delete-tpl" data-index="${idx}">🗑</button>
+                </div>
+              </div>
+              <p style="font-size:0.86rem; color:var(--slate);">${escapeHtml(t.body)}</p>
+            </div>
+          `;
+        }).join("") || `<p style="color:var(--muted);">No templates yet.</p>`;
+
+        // Notices
+        document.getElementById("adminNoticesList").innerHTML = db.notices.map((n, idx) => `
+          <div class="template-card" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap;">
+            <div>
+              <span style="font-size:0.78rem; color:var(--muted); margin-right:0.5rem;">${escapeHtml(n.date)}</span>
+              <span class="tag ${escapeHtml(n.tagClass)}" style="margin:0 0.4rem 0 0;">${escapeHtml(n.tag)}</span>
+              <span style="font-size:0.88rem;">${escapeHtml(n.text)}</span>
+            </div>
+            <button type="button" class="btn-outline" data-action="delete-notice" data-index="${idx}">Remove</button>
+          </div>
+        `).join("") || `<p style="color:var(--muted);">No active notices.</p>`;
+
+        // Insights
+        document.getElementById("adminInsightsList").innerHTML = db.insights.map((ins, idx) => `
+          <div class="template-card" style="display:flex; justify-content:space-between; gap:1rem; align-items:flex-start;">
+            <div>
+              <span class="tag tag-green">${escapeHtml(ins.tag)}</span>
+              <strong style="display:block; margin-bottom:0.25rem;">${escapeHtml(ins.title)}</strong>
+              <p style="font-size:0.84rem; color:var(--slate);">${escapeHtml(ins.body)}</p>
+            </div>
+            <button type="button" class="btn-outline" data-action="delete-insight" data-index="${idx}">Delete</button>
+          </div>
+        `).join("") || `<p style="color:var(--muted);">No articles published.</p>`;
+
+        // Customers
+        document.getElementById("adminCustomersList").innerHTML = db.customers.map((c, idx) => `
+          <div class="template-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <span class="tag ${c.status === "Active" ? "tag-green" : "tag-red"}" style="margin:0 0.4rem 0 0;">${escapeHtml(c.status)}</span>
+              <strong>${escapeHtml(c.fullName)}</strong>
+              <div style="font-size:0.82rem; color:var(--muted); margin-top:0.2rem;">
+                ${escapeHtml(c.email)} • ${escapeHtml(c.phone)} • Acct: ${escapeHtml(c.accountNumber)}
+              </div>
+              <div style="font-size:0.86rem; font-weight:700; margin-top:0.25rem;">
+                Checking: ${formatJPY(c.balances.checking)} | Savings: ${formatJPY(c.balances.savings)}
+              </div>
+            </div>
+            <div style="display:flex; gap:0.45rem; flex-wrap:wrap;">
+              <button type="button" class="btn-dark" data-action="credit-user" data-index="${idx}">+ Credit ¥50,000</button>
+              <button type="button" class="btn-outline" data-action="toggle-status" data-index="${idx}">${c.status === "Active" ? "Suspend" : "Activate"}</button>
+              <button type="button" class="btn-outline" data-action="delete-user" data-index="${idx}">🗑</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      document.addEventListener("click", function (e) {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const idx = Number(btn.dataset.index);
+        const db = load();
+
+        if (action === "push-alert") {
+          const t = db.templates[idx];
+          const meta = TAG_MAP[t.type] || TAG_MAP.info;
+          db.alert.enabled = true; db.alert.style = meta.alert; db.alert.text = `【${t.title}】 ${t.body}`;
+          showToast("Template pushed to Top Alert Banner!");
+        } else if (action === "push-notice") {
+          const t = db.templates[idx];
+          const meta = TAG_MAP[t.type] || TAG_MAP.info;
+          const today = new Date().toISOString().slice(0, 10).replace(/-/g, ".");
+          db.notices.unshift({ id: "n" + Date.now(), date: today, tag: meta.label, tagClass: meta.cls, text: `${t.title} — ${t.body}` });
+          showToast("Template published to notices!");
+        } else if (action === "delete-tpl") {
+          db.templates.splice(idx, 1); showToast("Template deleted.");
+        } else if (action === "delete-notice") {
+          db.notices.splice(idx, 1); showToast("Notice removed.");
+        } else if (action === "delete-insight") {
+          db.insights.splice(idx, 1); showToast("Article deleted.");
+        } else if (action === "credit-user") {
+          const u = db.customers[idx];
+          u.balances.checking += 50000;
+          u.ledger.unshift({ title: "Bank Admin Credit Deposit", meta: "Horizon Operations • Just now", amount: 50000 });
+          showToast(`Credited ¥50,000 to ${u.fullName}`);
+        } else if (action === "toggle-status") {
+          const u = db.customers[idx];
+          u.status = u.status === "Active" ? "Suspended" : "Active";
+          showToast(`${u.fullName} is now ${u.status}`);
+        } else if (action === "delete-user") {
+          if (db.customers.length <= 1) { showToast("Keep at least 1 customer account."); return; }
+          db.customers.splice(idx, 1); showToast("Customer account removed.");
+        }
+        save(db); renderAdmin();
+      });
+
+      document.getElementById("saveStatusBtn").addEventListener("click", function () {
+        const db = load();
+        document.querySelectorAll(".st-sub").forEach((inp) => { db.serviceStatus[Number(inp.dataset.sidx)].sub = inp.value.trim(); });
+        document.querySelectorAll(".st-val").forEach((sel) => { db.serviceStatus[Number(sel.dataset.sidx)].status = sel.value; });
+        save(db); renderAdmin(); showToast("Service Status updated on homepage!");
+      });
+
+      document.getElementById("customTemplateForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const db = load();
+        db.templates.unshift({
+          id: "t" + Date.now(),
+          title: document.getElementById("tplTitle").value.trim(),
+          type: document.getElementById("tplType").value,
+          body: document.getElementById("tplBody").value.trim()
+        });
+        save(db); renderAdmin(); e.target.reset(); showToast("Custom template saved!");
+      });
+
+      document.getElementById("saveAlertBtn").addEventListener("click", function () {
+        const db = load();
+        db.alert.enabled = document.getElementById("admAlertEnabled").checked;
+        db.alert.style = document.getElementById("admAlertStyle").value;
+        db.alert.text = document.getElementById("admAlertText").value.trim();
+        save(db); renderAdmin(); showToast("Top Alert Banner updated!");
+      });
+
+      document.getElementById("saveHeroBtn").addEventListener("click", function () {
+        const db = load();
+        db.hero.eyebrow = document.getElementById("admHeroEyebrow").value.trim();
+        db.hero.badge = document.getElementById("admHeroBadge").value.trim();
+        db.hero.title = document.getElementById("admHeroTitle").value.trim();
+        db.hero.desc = document.getElementById("admHeroDesc").value.trim();
+        db.hero.cta = document.getElementById("admHeroCta").value.trim();
+        save(db); renderAdmin(); showToast("Homepage Hero updated!");
+      });
+
+      document.querySelectorAll(".preset-insight-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const p = INSIGHT_PRESETS[this.dataset.preset];
+          if (!p) return;
+          document.getElementById("insTag").value = p.tag;
+          document.getElementById("insTitle").value = p.title;
+          document.getElementById("insBody").value = p.body;
+        });
+      });
+
+      document.getElementById("addInsightForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const db = load();
+        db.insights.unshift({
+          id: "i" + Date.now(),
+          tag: document.getElementById("insTag").value.trim(),
+          title: document.getElementById("insTitle").value.trim(),
+          body: document.getElementById("insBody").value.trim()
+        });
+        save(db); renderAdmin(); e.target.reset(); showToast("Article published!");
+      });
+
+      document.getElementById("saveRatesBtn").addEventListener("click", function () {
+        const db = load();
+        db.rates.usdJpy = document.getElementById("admUsdJpy").value.trim();
+        db.rates.eurJpy = document.getElementById("admEurJpy").value.trim();
+        db.rates.timeRate = document.getElementById("admTimeRate").value.trim();
+        db.rates.loanRate = document.getElementById("admLoanRate").value.trim();
+        save(db); renderAdmin(); showToast("Live rates updated!");
+      });
+
+      document.getElementById("saveContactBtn").addEventListener("click", function () {
+        const db = load();
+        db.contact.domain = document.getElementById("admDomain").value.trim();
+        db.contact.email = document.getElementById("admEmail").value.trim();
+        db.contact.phone = document.getElementById("admPhone").value.trim();
+        db.contact.address = document.getElementById("admAddress").value.trim();
+        save(db); renderAdmin(); showToast("Contact settings saved!");
+      });
+
+      document.getElementById("saveAdminCredsBtn").addEventListener("click", function () {
+        const u = document.getElementById("admNewUser").value.trim();
+        const p = document.getElementById("admNewPass").value.trim();
+        if (!u || !p) { showToast("Username and passcode cannot be empty."); return; }
+        const db = load();
+        db.adminCredentials.username = u;
+        db.adminCredentials.passcode = p;
+        save(db); showToast("Admin login credentials updated!");
+      });
+
+      document.getElementById("resetDefaultsBtn").addEventListener("click", function () {
+        reset(); renderAdmin(); showToast("All settings restored to defaults.");
+      });
+
+      checkGate();
+    })();
+  </script>
+</body>
+</html>
