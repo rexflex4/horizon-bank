@@ -1,4 +1,9 @@
 (function () {
+  if (!window.HorizonStore) {
+    alert("Could not load js/store.js. Please check that js/store.js exists in your repository.");
+    return;
+  }
+
   const {
     load,
     save,
@@ -13,8 +18,10 @@
   const db = load();
   renderAlertBar(db);
 
-  document.getElementById("authFooterDomain").textContent = db.contact.domain;
-  document.getElementById("authFooterEmail").textContent = db.contact.email;
+  const fDomain = document.getElementById("authFooterDomain");
+  const fEmail = document.getElementById("authFooterEmail");
+  if (fDomain) fDomain.textContent = db.contact.domain;
+  if (fEmail) fEmail.textContent = db.contact.email;
 
   const existingUser = getCurrentUser();
   if (existingUser) {
@@ -78,12 +85,10 @@
     setTimeout(() => { window.location.href = "dashboard.html"; }, 500);
   });
 
-  // =========================================
-  // 4-STEP HORIZON ENROLLMENT WIZARD
-  // =========================================
+  // 4-Step Horizon Enrollment Wizard
   const enrollDraft = {
     accountType: "Personal",
-    plan: "Everyday Checking",
+    plan: "Everyday Checking (¥0 Monthly Fee)",
     fullName: "",
     phone: "",
     email: "",
@@ -121,7 +126,6 @@
     if (stepNum === 4) document.getElementById("enrollStep4Box").classList.add("active");
   }
 
-  // Personal vs Business selector
   document.querySelectorAll(".acct-type-card").forEach((card) => {
     card.addEventListener("click", function () {
       document.querySelectorAll(".acct-type-card").forEach((c) => c.classList.remove("selected"));
@@ -158,7 +162,7 @@
     setEnrollStep(2);
   });
 
-  // Step 2: Send & Verify Secure Access Code
+  // Step 2: Send & Verify Access Code
   document.getElementById("sendAccessCodeBtn").addEventListener("click", function () {
     const method = document.getElementById("codeDeliveryMethod").value;
     const code = String(Math.floor(100000 + Math.random() * 900000));
@@ -170,6 +174,7 @@
     banner.innerHTML = `Secure Access Code sent to <strong>${escapeHtml(target)}</strong>.<br>Demo Verification Code: <strong style="font-size:1.05rem; letter-spacing:0.12em;">${code}</strong>`;
 
     document.getElementById("enrollStep2Form").style.display = "block";
+    document.getElementById("accessCodeInput").value = code; // Pre-filled for easy testing
     showToast("6-digit Secure Access Code generated!");
   });
 
@@ -196,7 +201,7 @@
     setEnrollStep(3);
   });
 
-  // Step 3: Password Strength, Show/Hide & Finalize Registration
+  // Step 3: Password & Complete Enrollment
   const regPassInput = document.getElementById("regPassword");
   document.getElementById("toggleRegPassBtn").addEventListener("click", function () {
     const hidden = regPassInput.type === "password";
@@ -247,7 +252,6 @@
       return;
     }
 
-    // Save Horizon enrollment details onto the new customer record
     const latestDb = load();
     const created = latestDb.customers.find((c) => c.id === res.user.id);
     const eStatements = document.getElementById("chkEstatements").checked;
