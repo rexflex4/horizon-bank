@@ -2,7 +2,6 @@
   const {
     STORAGE_KEY,
     load,
-    registerCustomer,
     loginCustomer,
     escapeHtml,
     formatJPY,
@@ -118,7 +117,7 @@
     showToast(`Support: ${db.contact.email} • Demo: demo@horizonbank.jp / Demo1234`);
   });
 
-  // Hero Login Form
+  // Hero Login Form -> goes straight to dashboard.html
   document.getElementById("heroLoginForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const result = loginCustomer(
@@ -133,101 +132,22 @@
     setTimeout(() => { window.location.href = "dashboard.html"; }, 500);
   });
 
-  // =========================================
-  // INSTANT SIGN UP & LOGIN MODAL HANDLERS
-  // =========================================
-  const authModal = document.getElementById("authModal");
-  const modalTabLogin = document.getElementById("modalTabLogin");
-  const modalTabSignup = document.getElementById("modalTabSignup");
-  const modalLoginForm = document.getElementById("modalLoginForm");
-  const modalSignupForm = document.getElementById("modalSignupForm");
-
-  function openAuthModal(mode) {
-    const isSignup = mode === "signup";
-    modalTabLogin.classList.toggle("active", !isSignup);
-    modalTabSignup.classList.toggle("active", isSignup);
-    modalLoginForm.style.display = isSignup ? "none" : "block";
-    modalSignupForm.style.display = isSignup ? "block" : "none";
-    authModal.classList.add("open");
-  }
-
+  // Route Sign Up & Login buttons straight to the 4-Step Enrollment / Login page
   document.querySelectorAll(".js-open-signup").forEach((el) => {
     el.addEventListener("click", function (e) {
       e.preventDefault();
-      openAuthModal("signup");
+      window.location.href = "auth.html?mode=signup";
     });
   });
 
   document.querySelectorAll(".js-open-login").forEach((el) => {
     el.addEventListener("click", function (e) {
       e.preventDefault();
-      openAuthModal("login");
+      window.location.href = "auth.html";
     });
   });
 
-  modalTabLogin.addEventListener("click", () => openAuthModal("login"));
-  modalTabSignup.addEventListener("click", () => openAuthModal("signup"));
-  document.getElementById("closeAuthModalBtn").addEventListener("click", () => authModal.classList.remove("open"));
-  authModal.addEventListener("click", (e) => { if (e.target === authModal) authModal.classList.remove("open"); });
-
-  document.getElementById("mFillDemoBtn").addEventListener("click", function () {
-    document.getElementById("mLoginEmail").value = "demo@horizonbank.jp";
-    document.getElementById("mLoginPass").value = "Demo1234";
-  });
-
-  modalLoginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const errEl = document.getElementById("mLoginErr");
-    errEl.style.display = "none";
-    const res = loginCustomer(
-      document.getElementById("mLoginEmail").value,
-      document.getElementById("mLoginPass").value
-    );
-    if (!res.ok) {
-      errEl.textContent = res.error;
-      errEl.style.display = "block";
-      return;
-    }
-    showToast(`Welcome back, ${res.user.fullName}!`);
-    setTimeout(() => { window.location.href = "dashboard.html"; }, 500);
-  });
-
-  modalSignupForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const errEl = document.getElementById("mSignupErr");
-    errEl.style.display = "none";
-
-    const fullName = document.getElementById("mRegName").value.trim();
-    const email = document.getElementById("mRegEmail").value.trim();
-    const phone = document.getElementById("mRegPhone").value.trim();
-    const password = document.getElementById("mRegPass").value;
-    const confirm = document.getElementById("mRegConfirm").value;
-
-    if (password.length < 6) {
-      errEl.textContent = "Password must be at least 6 characters.";
-      errEl.style.display = "block";
-      return;
-    }
-    if (password !== confirm) {
-      errEl.textContent = "Passwords do not match.";
-      errEl.style.display = "block";
-      return;
-    }
-
-    const res = registerCustomer({ fullName, email, phone, password });
-    if (!res.ok) {
-      errEl.textContent = res.error;
-      errEl.style.display = "block";
-      return;
-    }
-
-    showToast("Account created! Opening your Crimson Horizon Dashboard...");
-    setTimeout(() => { window.location.href = "dashboard.html"; }, 650);
-  });
-
-  // =========================================
-  // PERSONAL FINANCE CALCULATOR
-  // =========================================
+  // Personal Finance Calculator
   function runCalculator() {
     const P = Math.max(0, Number(document.getElementById("calcAmount").value) || 0);
     const PMT = Math.max(0, Number(document.getElementById("calcMonthly").value) || 0);
