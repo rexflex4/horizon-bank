@@ -1,48 +1,48 @@
 (function () {
-  const { load, escapeHtml, renderAlertBar, showToast } = window.HyakugoStore;
+  const { STORAGE_KEY, load, loginCustomer, escapeHtml, renderAlertBar, showToast } = window.HorizonStore;
 
   function renderPublicPage() {
-    const cms = load();
+    const db = load();
 
-    // 1. Top Alert Banner
-    renderAlertBar(cms);
+    // 1. Alert Banner
+    renderAlertBar(db);
 
     // 2. Hero Content
-    document.getElementById("heroBadgeDisplay").textContent = cms.hero.badge;
-    document.getElementById("heroTitleDisplay").textContent = cms.hero.title;
-    document.getElementById("heroDescDisplay").textContent = cms.hero.desc;
-    document.getElementById("heroCtaBtn").textContent = cms.hero.cta;
+    document.getElementById("heroBadgeDisplay").textContent = db.hero.badge;
+    document.getElementById("heroTitleDisplay").textContent = db.hero.title;
+    document.getElementById("heroDescDisplay").textContent = db.hero.desc;
+    document.getElementById("heroCtaBtn").textContent = db.hero.cta;
 
-    // 3. Market & Interest Rates Strip
+    // 3. Rates Strip
     document.getElementById("liveRatesStrip").innerHTML = `
       <div class="rate-box">
-        <span>USD / JPY TTM</span>
-        <strong>${escapeHtml(cms.rates.usdJpy)}</strong>
-        <small>Live Desk Rate</small>
+        <span>USD / JPY Rate</span>
+        <strong>${escapeHtml(db.rates.usdJpy)}</strong>
+        <small>Global FX Ready</small>
       </div>
       <div class="rate-box">
-        <span>EUR / JPY TTM</span>
-        <strong>${escapeHtml(cms.rates.eurJpy)}</strong>
-        <small>Foreign Savings Ready</small>
+        <span>EUR / JPY Rate</span>
+        <strong>${escapeHtml(db.rates.eurJpy)}</strong>
+        <small>Zero Hidden Spread</small>
       </div>
       <div class="rate-box">
         <span>1-Year Time Deposit</span>
-        <strong>${escapeHtml(cms.rates.timeRate)}</strong>
-        <small>Preferential Online</small>
+        <strong>${escapeHtml(db.rates.timeRate)}</strong>
+        <small>High-Yield Savings</small>
       </div>
       <div class="rate-box">
         <span>Housing Loan (Variable)</span>
-        <strong>${escapeHtml(cms.rates.loanRate)}</strong>
+        <strong>${escapeHtml(db.rates.loanRate)}</strong>
         <small>Annual Rate</small>
       </div>
     `;
 
     // 4. Interesting Information Cards
     const insightsEl = document.getElementById("publicInsightsGrid");
-    if (cms.insights.length === 0) {
-      insightsEl.innerHTML = `<p style="color:var(--muted);">No articles published yet. Add some from the Admin Panel!</p>`;
+    if (db.insights.length === 0) {
+      insightsEl.innerHTML = `<p style="color:var(--muted);">No insights published yet.</p>`;
     } else {
-      insightsEl.innerHTML = cms.insights.map((item) => `
+      insightsEl.innerHTML = db.insights.map((item) => `
         <div class="card card-3d-hover">
           <span class="tag tag-blue">${escapeHtml(item.tag)}</span>
           <h3 style="margin-bottom:0.45rem;">${escapeHtml(item.title)}</h3>
@@ -51,12 +51,12 @@
       `).join("");
     }
 
-    // 5. Important Notices List
+    // 5. Important Notices
     const noticesEl = document.getElementById("publicNoticesList");
-    if (cms.notices.length === 0) {
+    if (db.notices.length === 0) {
       noticesEl.innerHTML = `<p style="color:var(--muted);">No notices at this time.</p>`;
     } else {
-      noticesEl.innerHTML = cms.notices.map((n) => `
+      noticesEl.innerHTML = db.notices.map((n) => `
         <div class="notice-row">
           <span class="notice-date">${escapeHtml(n.date)}</span>
           <span class="tag ${escapeHtml(n.tagClass)}" style="margin:0;">${escapeHtml(n.tag)}</span>
@@ -64,23 +64,41 @@
         </div>
       `).join("");
     }
+
+    // 6. Contact Info & Footer
+    document.getElementById("contactEmailDisplay").innerHTML =
+      `<a href="mailto:${escapeHtml(db.contact.email)}" style="color:var(--crimson); text-decoration:none;">${escapeHtml(db.contact.email)}</a>`;
+    document.getElementById("contactPhoneDisplay").textContent = db.contact.phone;
+    document.getElementById("contactDomainDisplay").textContent = db.contact.domain;
+    document.getElementById("contactAddressDisplay").textContent = db.contact.address;
+    document.getElementById("footerBrandDomain").textContent = db.contact.domain;
+    document.getElementById("footerBrandEmail").textContent = db.contact.email;
   }
 
-  // Hero Direct Login Form -> redirect to banking.html
-  const loginForm = document.getElementById("heroLoginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", function (e) {
+  // Hero Login Form -> authenticates customer and sends to dashboard.html
+  const heroLoginForm = document.getElementById("heroLoginForm");
+  if (heroLoginForm) {
+    heroLoginForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      showToast("Hyakugo ID Passkey verified! Opening Hyakugo Direct...");
+      const email = document.getElementById("heroLoginEmail").value;
+      const pass = document.getElementById("heroLoginPass").value;
+      const result = loginCustomer(email, pass);
+
+      if (!result.ok) {
+        showToast(result.error);
+        return;
+      }
+
+      showToast(`Welcome back, ${result.user.fullName}! Opening dashboard...`);
       setTimeout(() => {
-        window.location.href = "banking.html";
-      }, 650);
+        window.location.href = "dashboard.html";
+      }, 550);
     });
   }
 
-  // Live cross-tab sync when Admin Panel updates localStorage
+  // Live sync if Admin edits site in another browser tab
   window.addEventListener("storage", function (e) {
-    if (e.key === "hyakugo_bank_cms_v1") {
+    if (e.key === STORAGE_KEY) {
       renderPublicPage();
     }
   });
