@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyakugo Direct | Online Banking — The Hyakugo Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top Mode Bar -->
+  <div class="mode-bar">
+    <div class="mode-meta">
+      <span>Bank Code: <strong style="color:#fff;">0155</strong></span>
+      <span>Hyakugo Direct • FIDO2 Passkey Session Active</span>
+    </div>
+    <div class="mode-tabs">
+      <a href="index.html" class="mode-link">🏛️ Hyakugo Bank Website</a>
+      <a href="banking.html" class="mode-link active">💻 Hyakugo Direct (Online Banking)</a>
+      <a href="admin.html" class="mode-link">⚙️ Admin Panel &amp; Templates</a>
+    </div>
+  </div>
+
+  <!-- Live Admin-Controlled Alert Banner -->
+  <div id="liveAlertBar" class="live-alert-bar alert-info">
+    <span id="liveAlertText"></span>
+  </div>
+
+  <!-- Official Hyakugo Bank Header -->
+  <header class="bank-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-lockup">
+        <div class="hyakugo-mark">105</div>
+        <div>
+          <div class="brand-jp">株式会社 百五銀行 • 百五ダイレクト</div>
+          <div class="brand-en">HYAKUGO DIRECT</div>
+        </div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="index.html" class="nav-item">← Bank Homepage</a>
+        <a href="#card-section" class="nav-item">3D Cash Card</a>
+        <a href="#transfer-section" class="nav-item">Transfers</a>
+        <a href="admin.html" class="btn-outline">⚙️ Admin Control</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="sec-head">
+      <div>
+        <span class="tag tag-red">Hyakugo ID Authenticated • Branch 001 Tsu Main</span>
+        <h2>Account Summary &amp; Online Banking</h2>
+      </div>
+      <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+        <button type="button" class="btn-outline" id="privacyToggleBtn">👁️ Hide Balances</button>
+        <a href="index.html" class="btn-outline">Sign Out to Home</a>
+      </div>
+    </div>
+
+    <!-- JPY Account Cards -->
+    <div class="grid-3" style="margin-bottom:1.75rem;">
+      <div class="card card-3d-hover">
+        <div style="font-size:0.8rem; color:var(--muted);">普通預金 • Ordinary Deposit (Tsu Main #001)</div>
+        <div style="font-size:1.85rem; font-weight:800; margin:0.3rem 0;" id="balOrdinary">¥2,485,320</div>
+        <div style="font-size:0.78rem; color:var(--emerald); font-weight:700;">Passbook-less Account Active</div>
+      </div>
+
+      <div class="card card-3d-hover">
+        <div style="font-size:0.8rem; color:var(--muted);">定期預金 • Time Deposit (1-Year)</div>
+        <div style="font-size:1.85rem; font-weight:800; margin:0.3rem 0;" id="balTime">¥5,000,000</div>
+        <div style="font-size:0.78rem; color:var(--slate);">Annual Yield: <strong id="portalTimeRate">0.35%</strong></div>
+      </div>
+
+      <div class="card card-3d-hover">
+        <div style="font-size:0.8rem; color:var(--muted);">投資信託・NISA • Portfolio Value</div>
+        <div style="font-size:1.85rem; font-weight:800; margin:0.3rem 0;" id="balNisa">¥1,840,000</div>
+        <div style="font-size:0.78rem; color:var(--emerald); font-weight:700;">+¥184,200 Unrealized Gain</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Left Column: Interactive 3D Card + Transfer Form -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div class="card" id="card-section">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>3D Hyakugo 105BESTIO Card</h3>
+            <span style="font-size:0.76rem; color:var(--muted);">Move cursor over card to tilt in 3D</span>
+          </div>
+
+          <div class="card-stage">
+            <div class="card-3d-tilt" id="hCardTilt">
+              <div class="card-3d-inner" id="hCardInner">
+                <!-- Front -->
+                <div class="card-face">
+                  <div class="frozen-mask">LOCKED / FROZEN</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div class="card-chip"></div>
+                    <strong style="letter-spacing:0.06em;">HYAKUGO 105</strong>
+                  </div>
+                  <div id="hCardNumber" style="font-size:1.1rem; letter-spacing:0.14em; font-weight:700;">
+                    0155  001  ••••  4821
+                  </div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.76rem;">
+                    <span>ALEX MORGAN</span>
+                    <span>VALID THRU 09/29</span>
+                  </div>
+                </div>
+
+                <!-- Back -->
+                <div class="card-face card-back">
+                  <div class="frozen-mask">LOCKED / FROZEN</div>
+                  <div style="height:36px; background:#020617; margin:0.2rem -1.35rem;"></div>
+                  <div style="background:#fff; color:#0f172a; padding:0.4rem 0.7rem; border-radius:6px; font-weight:800; font-size:0.85rem; display:flex; justify-content:space-between;">
+                    <span>Branch: 001 Tsu Main</span>
+                    <span>CVV: 105</span>
+                  </div>
+                  <div style="font-size:0.7rem; color:#cbd5e1;">
+                    THE HYAKUGO BANK, LTD. • Lost Card Desk: 0120-105-001
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
+            <button type="button" class="btn-outline" id="hFlipBtn">🔄 Flip 3D Card</button>
+            <button type="button" class="btn-outline" id="hRevealBtn">👁️ Reveal Digits</button>
+            <button type="button" class="btn-outline" id="hFreezeBtn">❄️ Lock / Freeze</button>
+          </div>
+        </div>
+
+        <div class="card" id="transfer-section">
+          <h3 style="margin-bottom:0.85rem;">Instant Transfer (お振込)</h3>
+          <form id="jpyTransferForm">
+            <div class="form-group">
+              <label for="jpyDestBank">Destination Bank</label>
+              <select id="jpyDestBank">
+                <option value="0">Hyakugo Bank Account (Fee: ¥0)</option>
+                <option value="165">Other Japanese Bank (Fee: ¥165)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="jpyRecipient">Recipient Name (Katakana / English)</label>
+              <input type="text" id="jpyRecipient" placeholder="e.g. TANAKA TARO / ISE MART" required />
+            </div>
+            <div class="form-group">
+              <label for="jpyAmount">Amount (¥ JPY)</label>
+              <input type="number" id="jpyAmount" min="100" step="100" placeholder="15000" required />
+            </div>
+            <button type="submit" class="btn" style="width:100%;">Execute ¥ Transfer</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: Deposit & Withdrawal Ledger -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem;">
+          <h3>Deposit &amp; Withdrawal Statement (入出金明細)</h3>
+          <input type="text" id="ledgerSearch" placeholder="Filter transactions..." style="width:190px;" />
+        </div>
+        <div id="jpyLedgerList"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div style="max-width:1220px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <strong style="color:#fff;">THE HYAKUGO BANK, LTD. (株式会社 百五銀行)</strong><br />
+        <span>Hyakugo Direct Banking • Financial Institution Code: 0155</span>
+      </div>
+      <div>
+        <span>© THE HYAKUGO BANK, LTD. Multi-File Demo Project.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast">Updated!</div>
+
+  <script src="js/store.js"></script>
+  <script src="js/banking.js"></script>
+</body>
+</html>
