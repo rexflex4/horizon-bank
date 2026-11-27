@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | The Hyakugo Bank — Website Control Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top Mode Bar -->
+  <div class="mode-bar">
+    <div class="mode-meta">
+      <span>Bank Code: <strong style="color:#fff;">0155</strong></span>
+      <span>Hyakugo Bank CMS • Admin Workspace</span>
+    </div>
+    <div class="mode-tabs">
+      <a href="index.html" class="mode-link">🏛️ Hyakugo Bank Website</a>
+      <a href="banking.html" class="mode-link">💻 Hyakugo Direct (Online Banking)</a>
+      <a href="admin.html" class="mode-link active">⚙️ Admin Panel &amp; Templates</a>
+    </div>
+  </div>
+
+  <!-- Live Admin-Controlled Alert Banner Preview -->
+  <div id="liveAlertBar" class="live-alert-bar alert-info">
+    <span id="liveAlertText"></span>
+  </div>
+
+  <!-- Official Header -->
+  <header class="bank-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-lockup">
+        <div class="hyakugo-mark">105</div>
+        <div>
+          <div class="brand-jp">株式会社 百五銀行 • ADMIN CONTROL</div>
+          <div class="brand-en">HYAKUGO WEBSITE CMS</div>
+        </div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="index.html" class="btn-outline">← View Live Website</a>
+        <a href="banking.html" class="btn-outline">💻 Open Hyakugo Direct</a>
+        <button type="button" class="btn" id="resetDefaultsBtn">↺ Reset All Defaults</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="sec-head">
+      <div>
+        <span class="tag tag-amber">Administrator Workspace</span>
+        <h2>Hyakugo Bank Website Control Panel</h2>
+      </div>
+      <span style="font-size:0.84rem; color:var(--muted);">Changes save automatically and update the live pages</span>
+    </div>
+
+    <div class="admin-layout">
+      <!-- Admin Sidebar -->
+      <aside class="admin-sidebar">
+        <div style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.8rem;">
+          Website Controls
+        </div>
+        <button type="button" class="admin-nav-btn active" data-admintab="templates">📋 Message Templates</button>
+        <button type="button" class="admin-nav-btn" data-admintab="banner">🎨 Hero &amp; Alert Control</button>
+        <button type="button" class="admin-nav-btn" data-admintab="insights">💡 Interesting Information</button>
+        <button type="button" class="admin-nav-btn" data-admintab="rates">📈 Market &amp; Interest Rates</button>
+
+        <div style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.12); font-size:0.78rem; color:#94a3b8;">
+          Tip: Open <strong>index.html</strong> in another tab or click <strong>View Live Website</strong> after saving to see your updates immediately.
+        </div>
+      </aside>
+
+      <!-- Admin Content Area -->
+      <div>
+        <!-- TAB 1: MESSAGE TEMPLATES & NOTICES -->
+        <div id="admintab-templates" class="admin-panel-tab active">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="margin-bottom:0.4rem;">Ready-to-Use Banking Message Templates</h3>
+            <p style="font-size:0.86rem; color:var(--muted); margin-bottom:1.25rem;">
+              Click <strong>Push to Top Alert</strong> or <strong>+ Add to Notices</strong> to publish any template directly to the Hyakugo Bank homepage.
+            </p>
+            <div id="templatesLibraryList"></div>
+          </div>
+
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="margin-bottom:1rem;">Create &amp; Save Custom Message Template</h3>
+            <form id="customTemplateForm">
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group">
+                  <label for="tplTitle">Template Title</label>
+                  <input type="text" id="tplTitle" placeholder="e.g. Golden Week Branch Hours" required />
+                </div>
+                <div class="form-group">
+                  <label for="tplType">Category / Severity</label>
+                  <select id="tplType">
+                    <option value="info">Notice (Blue)</option>
+                    <option value="warning">Maintenance / Caution (Amber)</option>
+                    <option value="danger">Security / Emergency (Red)</option>
+                    <option value="campaign">Campaign / Promo (Green)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="tplBody">Message Body</label>
+                <textarea id="tplBody" rows="3" placeholder="Enter the official announcement text..." required></textarea>
+              </div>
+              <button type="submit" class="btn">Save Template to Library</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Active Notices Currently on Website</h3>
+            <div id="adminNoticesList"></div>
+          </div>
+        </div>
+
+        <!-- TAB 2: HERO & ALERT CONTROL -->
+        <div id="admintab-banner" class="admin-panel-tab">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="margin-bottom:1rem;">Top Alert Banner Control</h3>
+            <div class="form-group">
+              <label style="display:flex; align-items:center; gap:0.6rem; cursor:pointer;">
+                <input type="checkbox" id="admAlertEnabled" style="width:auto;" />
+                <span>Show Top Alert Banner across Website</span>
+              </label>
+            </div>
+            <div class="grid-2" style="gap:1rem;">
+              <div class="form-group">
+                <label for="admAlertStyle">Alert Style</label>
+                <select id="admAlertStyle">
+                  <option value="alert-info">Official Notice (Blue)</option>
+                  <option value="alert-warning">System Maintenance (Amber)</option>
+                  <option value="alert-danger">Urgent Security Warning (Red)</option>
+                  <option value="alert-campaign">New Campaign (Emerald)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="admAlertText">Alert Message Text</label>
+                <input type="text" id="admAlertText" />
+              </div>
+            </div>
+            <button type="button" class="btn" id="saveAlertBtn">Update Live Alert Banner</button>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Homepage Hero Section Editor</h3>
+            <div class="form-group">
+              <label for="admHeroBadge">Top Badge Pill</label>
+              <input type="text" id="admHeroBadge" />
+            </div>
+            <div class="form-group">
+              <label for="admHeroTitle">Hero Headline</label>
+              <input type="text" id="admHeroTitle" />
+            </div>
+            <div class="form-group">
+              <label for="admHeroDesc">Hero Subtitle</label>
+              <textarea id="admHeroDesc" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="admHeroCta">Primary Button Label</label>
+              <input type="text" id="admHeroCta" />
+            </div>
+            <button type="button" class="btn" id="saveHeroBtn">Publish Hero Changes</button>
+          </div>
+        </div>
+
+        <!-- TAB 3: INTERESTING INFORMATION MANAGER -->
+        <div id="admintab-insights" class="admin-panel-tab">
+          <div class="card" style="margin-bottom:1.5rem;">
+            <h3 style="margin-bottom:0.4rem;">Add &ldquo;Interesting Information&rdquo; Article to Website</h3>
+            <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">
+              Publish engaging regional Mie stories, Hyakugo trivia, or financial tips—or load a starter template below.
+            </p>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+              <button type="button" class="btn-outline preset-insight-btn" data-preset="heritage">+ 1878 Heritage Trivia</button>
+              <button type="button" class="btn-outline preset-insight-btn" data-preset="ise">+ Mie Sustainability Insight</button>
+              <button type="button" class="btn-outline preset-insight-btn" data-preset="passkey">+ Passkey Security Tip</button>
+              <button type="button" class="btn-outline preset-insight-btn" data-preset="nisa">+ NISA Growth Guide</button>
+            </div>
+            <form id="addInsightForm">
+              <div class="grid-2" style="gap:1rem;">
+                <div class="form-group">
+                  <label for="insTag">Tag Label</label>
+                  <input type="text" id="insTag" placeholder="e.g. Mie Heritage / Smart Finance" required />
+                </div>
+                <div class="form-group">
+                  <label for="insTitle">Article Title</label>
+                  <input type="text" id="insTitle" placeholder="Enter headline..." required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="insBody">Interesting Summary</label>
+                <textarea id="insBody" rows="3" placeholder="Write engaging, helpful information for visitors..." required></textarea>
+              </div>
+              <button type="submit" class="btn">Publish to Website</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Published Interesting Information Cards</h3>
+            <div id="adminInsightsList"></div>
+          </div>
+        </div>
+
+        <!-- TAB 4: MARKET & INTEREST RATES -->
+        <div id="admintab-rates" class="admin-panel-tab">
+          <div class="card">
+            <h3 style="margin-bottom:1rem;">Live Market &amp; Interest Rates Controller</h3>
+            <div class="grid-2" style="gap:1rem;">
+              <div class="form-group">
+                <label for="admUsdJpy">USD / JPY Exchange Rate</label>
+                <input type="text" id="admUsdJpy" />
+              </div>
+              <div class="form-group">
+                <label for="admEurJpy">EUR / JPY Exchange Rate</label>
+                <input type="text" id="admEurJpy" />
+              </div>
+              <div class="form-group">
+                <label for="admTimeRate">1-Year Time Deposit Rate</label>
+                <input type="text" id="admTimeRate" />
+              </div>
+              <div class="form-group">
+                <label for="admLoanRate">Housing Loan Variable Rate</label>
+                <input type="text" id="admLoanRate" />
+              </div>
+            </div>
+            <button type="button" class="btn" id="saveRatesBtn">Update Live Rates on Website</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div style="max-width:1220px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <strong style="color:#fff;">THE HYAKUGO BANK, LTD. (株式会社 百五銀行)</strong><br />
+        <span>Admin Content Management Portal • Financial Institution Code: 0155</span>
+      </div>
+      <div>
+        <span>© THE HYAKUGO BANK, LTD. Multi-File Demo Project.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast">Updated!</div>
+
+  <script src="js/store.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
