@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enroll &amp; Online Banking Login | Crimson Horizon Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <style>
+    .enroll-shell {
+      max-width: 680px; width: 100%; background: var(--surface, #fff);
+      border: 1px solid var(--border, #dfe6e2); border-top: 5px solid var(--forest, #0b5d3b);
+      border-radius: 18px; padding: 2rem; box-shadow: 0 22px 45px rgba(15, 23, 42, 0.13);
+    }
+    .stepper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1.75rem; }
+    .step-pill {
+      background: #f3f6f4; border: 1px solid #dfe6e2; border-radius: 10px;
+      padding: 0.55rem 0.5rem; text-align: center; font-size: 0.74rem; font-weight: 700; color: #64748b;
+    }
+    .step-pill.active { background: #ecfdf5; border-color: #0b5d3b; color: #0b5d3b; }
+    .step-pill.done { background: #0b5d3b; border-color: #0b5d3b; color: #ffffff; }
+    .acct-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.1rem; }
+    .acct-type-card {
+      border: 2px solid #dfe6e2; border-radius: 12px; padding: 0.9rem;
+      cursor: pointer; transition: all 0.2s; background: #ffffff; text-align: left;
+    }
+    .acct-type-card.selected { border-color: #0b5d3b; background: #ecfdf5; }
+    .code-demo-banner {
+      background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46;
+      padding: 0.85rem 1rem; border-radius: 10px; font-size: 0.86rem; margin-bottom: 1rem; display: none;
+    }
+    .check-row { display: flex; align-items: flex-start; gap: 0.65rem; margin-bottom: 0.8rem; font-size: 0.86rem; color: #334155; cursor: pointer; }
+    .check-row input { width: auto; margin-top: 0.22rem; }
+    .profile-preview {
+      background: #f3f6f4; border: 1px solid #dfe6e2; border-radius: 12px;
+      padding: 1rem; font-size: 0.85rem; margin-bottom: 1.25rem;
+    }
+    .enroll-step { display: none; }
+    .enroll-step.active { display: block; animation: fadeIn 0.25s ease; }
+    @media (max-width: 600px) {
+      .stepper { grid-template-columns: 1fr 1fr; }
+      .acct-type-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="liveAlertBar" class="live-alert-bar alert-info"><span id="liveAlertText"></span></div>
+
+  <header class="bank-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-lockup">
+        <div class="brand-mark">CHB</div>
+        <div>
+          <div class="brand-sub">Online Banking Enrollment &amp; Access</div>
+          <div class="brand-name">Crimson Horizon Bank</div>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" class="btn-outline">← Back to Bank Homepage</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-wrapper">
+    <div class="enroll-shell">
+      <div id="alreadySignedInBox" style="display:none; background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:0.9rem; border-radius:10px; margin-bottom:1.25rem; font-size:0.86rem;">
+        <div id="alreadyUserText" style="font-weight:700; margin-bottom:0.45rem;"></div>
+        <a href="dashboard.html" class="btn-forest" style="width:100%;">Continue to My Horizon Dashboard →</a>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabLoginBtn">Online Banking Login</button>
+        <button type="button" class="auth-tab-btn" id="tabSignupBtn">Enroll in Online Banking</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div id="loginPanel">
+        <h2 style="font-size:1.4rem; margin-bottom:0.25rem;">Welcome Back</h2>
+        <p style="font-size:0.86rem; color:var(--muted); margin-bottom:1.35rem;">
+          Sign in with your Login ID (Email) and Password to access Crimson Horizon Online Banking.
+        </p>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Login ID (Email Address)</label>
+            <input type="email" id="loginEmail" placeholder="demo@horizonbank.jp" required />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="loginPassword" placeholder="Enter your password" required style="padding-right:3.5rem;" />
+              <button type="button" class="pass-show-btn" id="toggleLoginPassBtn">Show</button>
+            </div>
+          </div>
+
+          <label class="check-row"><input type="checkbox" checked /><span>Register this device for faster sign-in</span></label>
+          <p id="loginError" style="display:none; color:var(--crimson); font-size:0.82rem; font-weight:700; margin-bottom:0.85rem;"></p>
+
+          <button type="submit" class="btn-forest" style="width:100%; margin-bottom:0.65rem;">Login to Horizon Dashboard →</button>
+          <button type="button" class="btn-outline" id="fillDemoBtn" style="width:100%;">Fill Demo Account (demo@horizonbank.jp)</button>
+        </form>
+      </div>
+
+      <!-- 4-STEP HORIZON ENROLLMENT PANEL -->
+      <div id="signupPanel" style="display:none;">
+        <div style="margin-bottom:1rem;">
+          <h2 style="font-size:1.4rem; margin-bottom:0.2rem;">Enroll in Online Banking</h2>
+          <p style="font-size:0.85rem; color:var(--muted);">Complete the 4 steps below to open and activate your account.</p>
+        </div>
+
+        <div class="stepper">
+          <div class="step-pill active" id="pillStep1">1. Account Info</div>
+          <div class="step-pill" id="pillStep2">2. Access Code</div>
+          <div class="step-pill" id="pillStep3">3. Security &amp; Terms</div>
+          <div class="step-pill" id="pillStep4">4. Confirmed</div>
+        </div>
+
+        <!-- STEP 1 -->
+        <form id="enrollStep1Form" class="enroll-step active">
+          <div class="form-group">
+            <label>Select Account Category</label>
+            <div class="acct-type-grid">
+              <button type="button" class="acct-type-card selected" data-accttype="Personal">
+                <strong style="display:block; color:var(--navy);">Personal Account</strong>
+                <span style="font-size:0.78rem; color:var(--muted);">Everyday, Relationship, Student &amp; Fresh Start</span>
+              </button>
+              <button type="button" class="acct-type-card" data-accttype="Business">
+                <strong style="display:block; color:var(--navy);">Business Account</strong>
+                <span style="font-size:0.78rem; color:var(--muted);">Business Advantage, Benefit &amp; Treasury</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="regPlan">Choose Checking Plan</label>
+            <select id="regPlan">
+              <option value="Everyday Checking (¥0 Monthly Fee)">Everyday Checking (¥0 Monthly Fee)</option>
+              <option value="Relationship Checking">Relationship Checking</option>
+              <option value="Student Checking">Student Checking</option>
+              <option value="Fresh Start Checking">Fresh Start Checking</option>
+            </select>
+          </div>
+
+          <div class="grid-2" style="gap:0.85rem;">
+            <div class="form-group"><label for="regName">Full Legal Name</label><input type="text" id="regName" placeholder="e.g. Kenji Sato" required /></div>
+            <div class="form-group"><label for="regPhone">Mobile Phone Number</label><input type="tel" id="regPhone" placeholder="+81-90-1234-5678" required /></div>
+          </div>
+
+          <div class="grid-2" style="gap:0.85rem;">
+            <div class="form-group"><label for="regEmail">Email Address (Your Login ID)</label><input type="email" id="regEmail" placeholder="kenji@example.com" required /></div>
+            <div class="form-group"><label for="regIdLast4">ID / Reference (Optional)</label><input type="text" id="regIdLast4" maxlength="10" placeholder="e.g. 4821" /></div>
+          </div>
+
+          <p id="step1Error" style="display:none; color:var(--crimson); font-size:0.82rem; font-weight:700; margin-bottom:0.85rem;"></p>
+          <button type="submit" class="btn-forest" style="width:100%;">Continue to Secure Access Code →</button>
+        </form>
+
+        <!-- STEP 2 -->
+        <div id="enrollStep2Box" class="enroll-step">
+          <h3 style="font-size:1.1rem; margin-bottom:0.35rem;">Select Secure Access Code Delivery Method</h3>
+          <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem;">Choose how to receive your one-time 6-digit Secure Access Code.</p>
+
+          <div class="form-group">
+            <label for="codeDeliveryMethod">Preferred Delivery Channel</label>
+            <select id="codeDeliveryMethod">
+              <option value="sms">Text Message (SMS) to Mobile Phone</option>
+              <option value="email">Email to Registered Email Address</option>
+            </select>
+          </div>
+
+          <button type="button" class="btn" id="sendAccessCodeBtn" style="width:100%; margin-bottom:1rem;">Send 6-Digit Secure Access Code</button>
+          <div id="codeDemoBanner" class="code-demo-banner"></div>
+
+          <form id="enrollStep2Form" style="display:none;">
+            <div class="form-group"><label for="accessCodeInput">Enter 6-Digit Secure Access Code</label><input type="text" id="accessCodeInput" maxlength="6" placeholder="123456" required /></div>
+            <p id="step2Error" style="display:none; color:var(--crimson); font-size:0.82rem; font-weight:700; margin-bottom:0.85rem;"></p>
+            <div style="display:flex; gap:0.75rem;">
+              <button type="button" class="btn-outline" id="backToStep1Btn" style="flex:1;">← Back</button>
+              <button type="submit" class="btn-forest" style="flex:2;">Verify &amp; Review Profile →</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- STEP 3 -->
+        <form id="enrollStep3Form" class="enroll-step">
+          <h3 style="font-size:1.1rem; margin-bottom:0.65rem;">Confirm Profile &amp; Set Password</h3>
+          <div class="profile-preview" id="profilePreviewBox"></div>
+
+          <div class="form-group">
+            <label for="regPassword">Create Password (min. 6 characters)</label>
+            <div class="pass-wrap">
+              <input type="password" id="regPassword" minlength="6" placeholder="••••••••" required style="padding-right:3.5rem;" />
+              <button type="button" class="pass-show-btn" id="toggleRegPassBtn">Show</button>
+            </div>
+            <small id="passStrengthText" style="font-size:0.76rem; color:var(--muted);"></small>
+          </div>
+
+          <div class="form-group"><label for="regConfirm">Confirm Password</label><input type="password" id="regConfirm" minlength="6" placeholder="••••••••" required /></div>
+
+          <label class="check-row"><input type="checkbox" id="chkTerms" checked required /><span>I accept the <strong>Online Banking Terms of Service</strong> and Electronic Disclosures.</span></label>
+          <label class="check-row"><input type="checkbox" id="chkDevice" checked /><span><strong>Register this device</strong> to skip Secure Access Codes on future logins.</span></label>
+          <label class="check-row"><input type="checkbox" id="chkEstatements" checked /><span><strong>Enroll in Paperless eStatements</strong> (faster delivery &amp; reduces mail fraud).</span></label>
+
+          <p id="step3Error" style="display:none; color:var(--crimson); font-size:0.82rem; font-weight:700; margin-bottom:0.85rem;"></p>
+          <div style="display:flex; gap:0.75rem;">
+            <button type="button" class="btn-outline" id="backToStep2Btn" style="flex:1;">← Back</button>
+            <button type="submit" class="btn" style="flex:2;">Complete Enrollment →</button>
+          </div>
+        </form>
+
+        <!-- STEP 4 -->
+        <div id="enrollStep4Box" class="enroll-step" style="text-align:center;">
+          <div style="width:56px; height:56px; border-radius:50%; background:var(--forest-soft); color:var(--forest); display:grid; place-items:center; font-size:1.75rem; margin:0 auto 1rem;">✓</div>
+          <h3 style="font-size:1.35rem; margin-bottom:0.4rem;">Online Banking Enrollment Complete!</h3>
+          <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.25rem;">Your Crimson Horizon Bank account is active with a ¥100,000 starter balance.</p>
+          <div class="profile-preview" id="confirmSummaryBox" style="text-align:left;"></div>
+          <a href="dashboard.html" class="btn-forest" style="width:100%;">Launch My Horizon Dashboard →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="multi-footer">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <span><strong style="color:#fff;">CRIMSON HORIZON BANK</strong> • <span id="authFooterDomain"></span></span>
+      <span>Support: <span id="authFooterEmail"></span></span>
+    </div>
+  </footer>
+
+  <div id="toast">Notification</div>
+
+  <script src="js/store.js?v=5"></script>
+  <script>
+    (function () {
+      // Built-in fail-safe HorizonStore so auth.html ALWAYS works independently
+      if (!window.HorizonStore) {
+        const SK = "chb_portal_db_v1", SESS = "chb_active_user_id";
+        const DEF = {
+          contact: { domain: "crimsonhorizonbank.jp", email: "horizonbank.jp@gmail.com", phone: "+81-3-5550-0105", address: "Tokyo" },
+          alert: { enabled: true, style: "alert-info", text: "Welcome to Crimson Horizon Bank Online Banking." },
+          customers: [{ id: "u_demo", fullName: "Alex Morgan", email: "demo@horizonbank.jp", phone: "+81-90-1234-5678", password: "Demo1234", accountNumber: "8801-001-4821", status: "Active", cardFrozen: false, balances: { checking: 2485320, savings: 5000000, vault: 1840000 }, savingsGoal: { name: "Savings Goal", target: 8000000, current: 5000000 }, ledger: [] }]
+        };
+        const load = () => { try { return JSON.parse(localStorage.getItem(SK)) || JSON.parse(JSON.stringify(DEF)); } catch { return JSON.parse(JSON.stringify(DEF)); } };
+        const save = (d) => { try { localStorage.setItem(SK, JSON.stringify(d)); } catch {} };
+        window.HorizonStore = {
+          load, save,
+          registerCustomer: ({ fullName, email, phone, password }) => {
+            const db = load(), clean = email.trim().toLowerCase();
+            if (db.customers.some((c) => c.email.toLowerCase() === clean)) return { ok: false, error: "An account with this email already exists." };
+            const u = {
+              id: "u_" + Date.now(), fullName: fullName.trim(), email: clean, phone: phone.trim(), password,
+              accountNumber: "8801-002-" + Math.floor(1000 + Math.random() * 9000), status: "Active", cardFrozen: false,
+              balances: { checking: 100000, savings: 0, vault: 0 }, savingsGoal: { name: "Emergency Reserve", target: 1000000, current: 0 },
+              ledger: [{ title: "Welcome Starter Deposit", meta: "Crimson Horizon Bonus • Just now", amount: 100000 }]
+            };
+            db.customers.push(u); save(db); localStorage.setItem(SESS, u.id); return { ok: true, user: u };
+          },
+          loginCustomer: (e, p) => {
+            const db = load(), u = db.customers.find((c) => c.email.toLowerCase() === e.trim().toLowerCase() && c.password === p);
+            if (!u) return { ok: false, error: "Invalid email or password." };
+            if (u.status === "Suspended") return { ok: false, error: "Account frozen. Contact " + db.contact.email };
+            localStorage.setItem(SESS, u.id); return { ok: true, user: u };
+          },
+          getCurrentUser: () => { const id = localStorage.getItem(SESS); return id ? (load().customers.find((c) => c.id === id) || null) : null; },
+          escapeHtml: (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])),
+          renderAlertBar: (db) => {
+            const b = document.getElementById("liveAlertBar"), t = document.getElementById("liveAlertText");
+            if (b && t) { b.className = "live-alert-bar " + db.alert.style + (db.alert.enabled ? "" : " hidden"); t.textContent = db.alert.text; }
+          },
+          showToast: (m) => { const el = document.getElementById("toast"); if (el) { el.textContent = m; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 3000); } }
+        };
+      }
+
+      const { load, save, registerCustomer, loginCustomer, getCurrentUser, escapeHtml, renderAlertBar, showToast } = window.HorizonStore;
+      const db = load();
+      renderAlertBar(db);
+
+      document.getElementById("authFooterDomain").textContent = db.contact.domain;
+      document.getElementById("authFooterEmail").textContent = db.contact.email;
+
+      const existingUser = getCurrentUser();
+      if (existingUser) {
+        document.getElementById("alreadySignedInBox").style.display = "block";
+        document.getElementById("alreadyUserText").innerHTML = `Signed in as ${escapeHtml(existingUser.fullName)} (${escapeHtml(existingUser.email)})`;
+      }
+
+      const tabLoginBtn = document.getElementById("tabLoginBtn"), tabSignupBtn = document.getElementById("tabSignupBtn");
+      const loginPanel = document.getElementById("loginPanel"), signupPanel = document.getElementById("signupPanel");
+
+      function switchAuthMode(mode) {
+        const isSignup = mode === "signup";
+        tabLoginBtn.classList.toggle("active", !isSignup);
+        tabSignupBtn.classList.toggle("active", isSignup);
+        loginPanel.style.display = isSignup ? "none" : "block";
+        signupPanel.style.display = isSignup ? "block" : "none";
+      }
+
+      tabLoginBtn.addEventListener("click", () => switchAuthMode("login"));
+      tabSignupBtn.addEventListener("click", () => switchAuthMode("signup"));
+      if (new URLSearchParams(window.location.search).get("mode") === "signup") switchAuthMode("signup");
+
+      const loginPassInput = document.getElementById("loginPassword");
+      document.getElementById("toggleLoginPassBtn").addEventListener("click", function () {
+        const hidden = loginPassInput.type === "password";
+        loginPassInput.type = hidden ? "text" : "password";
+        this.textContent = hidden ? "Hide" : "Show";
+      });
+
+      document.getElementById("fillDemoBtn").addEventListener("click", () => {
+        document.getElementById("loginEmail").value = "demo@horizonbank.jp";
+        document.getElementById("loginPassword").value = "Demo1234";
+        showToast("Demo account credentials filled!");
+      });
+
+      document.getElementById("loginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById("loginError"); errEl.style.display = "none";
+        const res = loginCustomer(document.getElementById("loginEmail").value, document.getElementById("loginPassword").value);
+        if (!res.ok) { errEl.textContent = res.error; errEl.style.display = "block"; return; }
+        showToast(`Welcome back, ${res.user.fullName}!`);
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 450);
+      });
+
+      const enrollDraft = { accountType: "Personal", plan: "Everyday Checking (¥0 Monthly Fee)", fullName: "", phone: "", email: "", generatedCode: "" };
+      const PLANS = {
+        Personal: ["Everyday Checking (¥0 Monthly Fee)", "Relationship Checking", "Student Checking", "Fresh Start Checking"],
+        Business: ["Free Business Advantage Checking", "Business Benefit Checking", "Business Analyzed Checking", "Public Funds / Nonprofit Checking"]
+      };
+
+      function setEnrollStep(stepNum) {
+        document.querySelectorAll(".enroll-step").forEach((el) => el.classList.remove("active"));
+        for (let i = 1; i <= 4; i++) {
+          const pill = document.getElementById("pillStep" + i);
+          pill.classList.remove("active", "done");
+          if (i < stepNum) pill.classList.add("done");
+          if (i === stepNum) pill.classList.add("active");
+        }
+        if (stepNum === 1) document.getElementById("enrollStep1Form").classList.add("active");
+        if (stepNum === 2) document.getElementById("enrollStep2Box").classList.add("active");
+        if (stepNum === 3) document.getElementById("enrollStep3Form").classList.add("active");
+        if (stepNum === 4) document.getElementById("enrollStep4Box").classList.add("active");
+      }
+
+      document.querySelectorAll(".acct-type-card").forEach((card) => {
+        card.addEventListener("click", function () {
+          document.querySelectorAll(".acct-type-card").forEach((c) => c.classList.remove("selected"));
+          this.classList.add("selected");
+          enrollDraft.accountType = this.dataset.accttype;
+          document.getElementById("regPlan").innerHTML = PLANS[enrollDraft.accountType].map((p) => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join("");
+        });
+      });
+
+      document.getElementById("enrollStep1Form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById("step1Error"); errEl.style.display = "none";
+        const email = document.getElementById("regEmail").value.trim().toLowerCase();
+        if (load().customers.some((c) => c.email.toLowerCase() === email)) {
+          errEl.textContent = "This email is already enrolled. Switch to Online Banking Login."; errEl.style.display = "block"; return;
+        }
+        enrollDraft.plan = document.getElementById("regPlan").value;
+        enrollDraft.fullName = document.getElementById("regName").value.trim();
+        enrollDraft.phone = document.getElementById("regPhone").value.trim();
+        enrollDraft.email = email;
+        setEnrollStep(2);
+      });
+
+      document.getElementById("sendAccessCodeBtn").addEventListener("click", function () {
+        const method = document.getElementById("codeDeliveryMethod").value;
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        enrollDraft.generatedCode = code;
+        const target = method === "sms" ? enrollDraft.phone : enrollDraft.email;
+        const banner = document.getElementById("codeDemoBanner");
+        banner.style.display = "block";
+        banner.innerHTML = `Secure Access Code sent to <strong>${escapeHtml(target)}</strong>.<br>Demo Verification Code: <strong style="font-size:1.05rem; letter-spacing:0.12em;">${code}</strong>`;
+        document.getElementById("enrollStep2Form").style.display = "block";
+        document.getElementById("accessCodeInput").value = code;
+        showToast("6-digit Secure Access Code generated!");
+      });
+
+      document.getElementById("backToStep1Btn").addEventListener("click", () => setEnrollStep(1));
+
+      document.getElementById("enrollStep2Form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById("step2Error"); errEl.style.display = "none";
+        if (!enrollDraft.generatedCode || document.getElementById("accessCodeInput").value.trim() !== enrollDraft.generatedCode) {
+          errEl.textContent = "Invalid Secure Access Code. Please enter the 6-digit code shown above."; errEl.style.display = "block"; return;
+        }
+        document.getElementById("profilePreviewBox").innerHTML = `
+          <div><strong>Category:</strong> ${escapeHtml(enrollDraft.accountType)} — ${escapeHtml(enrollDraft.plan)}</div>
+          <div><strong>Full Name:</strong> ${escapeHtml(enrollDraft.fullName)}</div>
+          <div><strong>Login ID (Email):</strong> ${escapeHtml(enrollDraft.email)}</div>
+          <div><strong>Mobile Phone:</strong> ${escapeHtml(enrollDraft.phone)}</div>`;
+        setEnrollStep(3);
+      });
+
+      const regPassInput = document.getElementById("regPassword");
+      document.getElementById("toggleRegPassBtn").addEventListener("click", function () {
+        const hidden = regPassInput.type === "password";
+        regPassInput.type = hidden ? "text" : "password";
+        this.textContent = hidden ? "Hide" : "Show";
+      });
+      regPassInput.addEventListener("input", function () {
+        const l = this.value.length;
+        document.getElementById("passStrengthText").textContent = !l ? "" : l < 6 ? "Strength: Too short (min 6)" : l < 10 ? "Strength: Good" : "Strength: Strong";
+      });
+
+      document.getElementById("backToStep2Btn").addEventListener("click", () => setEnrollStep(2));
+
+      document.getElementById("enrollStep3Form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const errEl = document.getElementById("step3Error"); errEl.style.display = "none";
+        const password = regPassInput.value;
+        if (password.length < 6) { errEl.textContent = "Password must be at least 6 characters."; errEl.style.display = "block"; return; }
+        if (password !== document.getElementById("regConfirm").value) { errEl.textContent = "Passwords do not match."; errEl.style.display = "block"; return; }
+
+        const res = registerCustomer({ fullName: enrollDraft.fullName, email: enrollDraft.email, phone: enrollDraft.phone, password });
+        if (!res.ok) { errEl.textContent = res.error; errEl.style.display = "block"; return; }
+
+        const latestDb = load();
+        const created = latestDb.customers.find((c) => c.id === res.user.id);
+        const eStatements = document.getElementById("chkEstatements").checked;
+        const deviceReg = document.getElementById("chkDevice").checked;
+        if (created) {
+          created.accountType = enrollDraft.accountType;
+          created.planName = enrollDraft.plan;
+          created.eStatements = eStatements;
+          created.deviceRegistered = deviceReg;
+          save(latestDb);
+        }
+
+        document.getElementById("confirmSummaryBox").innerHTML = `
+          <div><strong>Confirmed Login ID:</strong> ${escapeHtml(res.user.email)}</div>
+          <div><strong>Account Number:</strong> ${escapeHtml(res.user.accountNumber)}</div>
+          <div><strong>Selected Plan:</strong> ${escapeHtml(enrollDraft.plan)}</div>
+          <div><strong>eStatements:</strong> ${eStatements ? "Enrolled (Paperless)" : "Paper"}</div>
+          <div><strong>Device Security:</strong> ${deviceReg ? "Trusted Device Registered" : "Code Required Per Login"}</div>`;
+        setEnrollStep(4);
+        showToast("Welcome to Crimson Horizon Bank!");
+      });
+    })();
+  </script>
+</body>
+</html>
