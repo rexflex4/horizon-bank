@@ -3,48 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hyakugo Bank | 株式会社 百五銀行 — Official Portal</title>
+  <title>Crimson Horizon Bank | Digital &amp; Personal Banking</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
-  <!-- Top Mode Bar -->
-  <div class="mode-bar">
-    <div class="mode-meta">
-      <span>Bank Code: <strong style="color:#fff;">0155</strong></span>
-      <span>Headquarters: Tsu City, Mie Prefecture (Est. 1878)</span>
-    </div>
-    <div class="mode-tabs">
-      <a href="index.html" class="mode-link active">🏛️ Hyakugo Bank Website</a>
-      <a href="banking.html" class="mode-link">💻 Hyakugo Direct (Online Banking)</a>
-      <a href="admin.html" class="mode-link">⚙️ Admin Panel &amp; Templates</a>
-    </div>
-  </div>
-
   <!-- Live Admin-Controlled Alert Banner -->
   <div id="liveAlertBar" class="live-alert-bar alert-info">
     <span id="liveAlertText"></span>
   </div>
 
-  <!-- Official Hyakugo Bank Header -->
+  <!-- Public Bank Header (No Admin Links Exposed) -->
   <header class="bank-header">
     <div class="header-inner">
       <a href="index.html" class="brand-lockup">
-        <div class="hyakugo-mark">105</div>
+        <div class="brand-mark">CHB</div>
         <div>
-          <div class="brand-jp">株式会社 百五銀行 • FRONTIER BANKING</div>
-          <div class="brand-en">THE HYAKUGO BANK</div>
+          <div class="brand-sub">Digital &amp; Private Banking</div>
+          <div class="brand-name">Crimson Horizon Bank</div>
         </div>
       </a>
 
       <nav class="main-nav">
-        <a href="#services-sec" class="nav-item">Personal Services</a>
-        <a href="#insights-sec" class="nav-item">Interesting Info</a>
-        <a href="#notices-sec" class="nav-item">Notices</a>
-        <a href="admin.html" class="btn-outline">⚙️ Admin Control</a>
-        <a href="banking.html" class="btn">🔐 Hyakugo Direct</a>
+        <a href="#services-sec" class="nav-item">Services</a>
+        <a href="#rates-sec" class="nav-item">Rates</a>
+        <a href="#insights-sec" class="nav-item">Insights</a>
+        <a href="#contact-sec" class="nav-item">Contact</a>
+        <a href="auth.html?mode=signup" class="btn-outline">Sign Up</a>
+        <a href="auth.html" class="btn">🔐 Client Login</a>
       </nav>
     </div>
   </header>
@@ -57,68 +45,70 @@
         <h1 class="hero-title" id="heroTitleDisplay"></h1>
         <p class="hero-desc" id="heroDescDisplay"></p>
         <div style="display:flex; gap:0.85rem; flex-wrap:wrap;">
-          <a href="banking.html" class="btn" id="heroCtaBtn"></a>
-          <a href="admin.html" class="btn-outline">Customize Page in Admin ↗</a>
+          <a href="auth.html?mode=signup" class="btn" id="heroCtaBtn"></a>
+          <a href="#services-sec" class="btn-outline">Explore Banking Services</a>
         </div>
       </div>
 
-      <!-- Direct Login Box -->
+      <!-- Customer Quick Login Box -->
       <div class="direct-box">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-          <h3 style="font-size:1.08rem;">Hyakugo Direct Banking</h3>
-          <span class="tag tag-red" style="margin:0;">Passkey Ready</span>
+          <h3 style="font-size:1.08rem;">Horizon Online Banking</h3>
+          <span class="tag tag-red" style="margin:0;">256-Bit Encrypted</span>
         </div>
         <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">
-          Sign in with your <strong>Hyakugo ID (百五ID)</strong> or FIDO2 Passkey for 24/7 transfers, NISA, and balance inquiries.
+          Sign in to access your JPY accounts, 3D Horizon Card, and instant transfers.
         </p>
+
         <form id="heroLoginForm">
           <div class="form-group">
-            <label for="heroLoginId">Hyakugo ID / Email</label>
-            <input type="text" id="heroLoginId" value="alex.morgan@hyakugo-demo.jp" required />
+            <label for="heroLoginEmail">Registered Email</label>
+            <input type="email" id="heroLoginEmail" placeholder="demo@horizonbank.jp" required />
           </div>
           <div class="form-group">
-            <label for="heroLoginPass">Passkey / Password</label>
-            <input type="password" id="heroLoginPass" value="••••••••••••" required />
+            <label for="heroLoginPass">Password</label>
+            <input type="password" id="heroLoginPass" placeholder="••••••••" required />
           </div>
-          <button type="submit" class="btn" style="width:100%;">Log On to Hyakugo Direct →</button>
+          <button type="submit" class="btn" style="width:100%;">Log In to Dashboard →</button>
         </form>
-        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); margin-top:0.75rem;">
-          <span>Easy Balance Inquiry (かんたん残高照会)</span>
-          <span>Help Desk: 0120-105-700</span>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; font-size:0.76rem; color:var(--muted); margin-top:0.85rem;">
+          <span>New customer? <a href="auth.html?mode=signup" style="color:var(--crimson); font-weight:700; text-decoration:none;">Create Account</a></span>
+          <span>Demo: <strong>demo@horizonbank.jp</strong> / <strong>Demo1234</strong></span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Quick Access Strip -->
+  <!-- Quick Access Tiles -->
   <div class="quick-links-strip">
     <div class="quick-grid">
-      <a href="banking.html" class="quick-tile">
-        <div class="tile-icon">📱</div>
+      <a href="auth.html?mode=signup" class="quick-tile">
+        <div class="tile-icon">✨</div>
         <div>
-          <strong style="font-size:0.92rem;">Smartphone Banking</strong>
-          <div style="font-size:0.76rem; color:var(--muted);">Passbook-less &amp; Instant</div>
+          <strong style="font-size:0.92rem;">Open Account Online</strong>
+          <div style="font-size:0.76rem; color:var(--muted);">Instant digital onboarding</div>
         </div>
       </a>
-      <a href="banking.html#card-section" class="quick-tile">
+      <a href="auth.html" class="quick-tile">
         <div class="tile-icon">💳</div>
         <div>
-          <strong style="font-size:0.92rem;">105BESTIO &amp; 3D Card</strong>
-          <div style="font-size:0.76rem; color:var(--muted);">IC Cash &amp; Debit Card</div>
+          <strong style="font-size:0.92rem;">3D Horizon Card</strong>
+          <div style="font-size:0.76rem; color:var(--muted);">Freeze, flip &amp; virtual controls</div>
         </div>
       </a>
       <a href="#insights-sec" class="quick-tile">
         <div class="tile-icon">💡</div>
         <div>
-          <strong style="font-size:0.92rem;">Interesting Info</strong>
-          <div style="font-size:0.76rem; color:var(--muted);">Heritage &amp; Smart Finance</div>
+          <strong style="font-size:0.92rem;">Financial Insights</strong>
+          <div style="font-size:0.76rem; color:var(--muted);">Smart saving &amp; FX guides</div>
         </div>
       </a>
-      <a href="admin.html" class="quick-tile">
-        <div class="tile-icon">🛠️</div>
+      <a href="#contact-sec" class="quick-tile">
+        <div class="tile-icon">✉️</div>
         <div>
-          <strong style="font-size:0.92rem;">Admin CMS</strong>
-          <div style="font-size:0.76rem; color:var(--muted);">Templates &amp; Live Control</div>
+          <strong style="font-size:0.92rem;">Customer Support</strong>
+          <div style="font-size:0.76rem; color:var(--muted);">24/7 digital help desk</div>
         </div>
       </a>
     </div>
@@ -126,56 +116,84 @@
 
   <!-- Main Content -->
   <main class="container">
-    <!-- Live Market & Interest Rates Strip (Admin Controlled) -->
-    <div class="rates-strip" id="liveRatesStrip"></div>
+    <!-- Live Market & Interest Rates Strip -->
+    <section id="rates-sec">
+      <div class="rates-strip" id="liveRatesStrip"></div>
+    </section>
 
     <!-- Personal Banking Services -->
     <section id="services-sec" style="margin-bottom:3rem;">
       <div class="sec-head">
-        <h2>Personal Banking &amp; Digital Services</h2>
-        <span style="font-size:0.85rem; color:var(--muted);">145+ Branches across Mie, Aichi, Tokyo &amp; Osaka</span>
+        <h2>Personal &amp; Digital Banking Services</h2>
+        <span style="font-size:0.85rem; color:var(--muted);">Seamless JPY &amp; Multi-Currency Accounts</span>
       </div>
       <div class="grid-3">
         <div class="card card-3d-hover">
-          <span class="tag tag-red">百五ダイレクト</span>
-          <h3 style="margin-bottom:0.45rem;">Zero-Fee Intra-Bank Transfers</h3>
+          <span class="tag tag-red">Horizon Checking</span>
+          <h3 style="margin-bottom:0.45rem;">Instant Domestic Transfers</h3>
           <p style="font-size:0.9rem; color:var(--slate);">
-            Send money to any Hyakugo Bank account for ¥0 and other Japanese banks for just ¥165—saving up to ¥550 vs. branch counters.
+            Send money between Crimson Horizon accounts with ¥0 fees and enjoy real-time transaction notifications inside your dashboard.
           </p>
         </div>
         <div class="card card-3d-hover">
-          <span class="tag tag-green">NISA &amp; Wealth</span>
-          <h3 style="margin-bottom:0.45rem;">NISA &amp; Investment Trusts</h3>
+          <span class="tag tag-green">High-Yield Vaults</span>
+          <h3 style="margin-bottom:0.45rem;">Smart Savings &amp; Goal Tracking</h3>
           <p style="font-size:0.9rem; color:var(--slate);">
-            Start automated monthly fund investing from ¥5,000/mo directly in Hyakugo Direct with reduced online purchase fees.
+            Set custom savings goals—from emergency reserves to property down payments—and track progress automatically.
           </p>
         </div>
         <div class="card card-3d-hover">
-          <span class="tag tag-blue">Housing &amp; Loans</span>
-          <h3 style="margin-bottom:0.45rem;">Housing Loans &amp; Sogo Pack</h3>
+          <span class="tag tag-blue">3D Card Security</span>
+          <h3 style="margin-bottom:0.45rem;">Interactive 3D Card Controls</h3>
           <p style="font-size:0.9rem; color:var(--slate);">
-            Competitive variable and fixed mortgage plans plus instant partial prepayment right from Smartphone Banking.
+            Lock or unlock your virtual and physical debit card in one click, reveal CVV securely, and monitor spending limits.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- Interesting Information Section (Admin Controlled) -->
+    <!-- Interesting Information & Insights -->
     <section id="insights-sec" style="margin-bottom:3rem;">
       <div class="sec-head">
-        <h2>Interesting Information &amp; Regional Insights</h2>
-        <a href="admin.html#insights" class="btn-outline">+ Manage Info in Admin</a>
+        <h2>Interesting Information &amp; Insights</h2>
+        <span style="font-size:0.85rem; color:var(--muted);">Curated financial knowledge &amp; security guides</span>
       </div>
       <div class="grid-3" id="publicInsightsGrid"></div>
     </section>
 
-    <!-- Important Notices Feed (Admin Template Controlled) -->
-    <section id="notices-sec">
+    <!-- Important Notices -->
+    <section id="notices-sec" style="margin-bottom:3rem;">
       <div class="sec-head">
         <h2>Important Notices &amp; Announcements</h2>
-        <a href="admin.html#templates" class="btn-outline">+ Publish Template Notice</a>
+        <span style="font-size:0.85rem; color:var(--muted);">Official service updates</span>
       </div>
       <div class="card" id="publicNoticesList"></div>
+    </section>
+
+    <!-- Contact Support Section -->
+    <section id="contact-sec">
+      <div class="sec-head">
+        <h2>Contact Crimson Horizon Bank</h2>
+        <span style="font-size:0.85rem; color:var(--muted);">We’re here to assist you</span>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <span class="tag tag-red">Email Support</span>
+          <h3 style="margin-bottom:0.35rem;">Official Email</h3>
+          <p id="contactEmailDisplay" style="font-weight:700; color:var(--navy); word-break:break-all;"></p>
+        </div>
+        <div class="card">
+          <span class="tag tag-blue">Phone Desk</span>
+          <h3 style="margin-bottom:0.35rem;">Customer Care Line</h3>
+          <p id="contactPhoneDisplay" style="font-weight:700; color:var(--navy);"></p>
+        </div>
+        <div class="card">
+          <span class="tag tag-green">Headquarters &amp; Web</span>
+          <h3 style="margin-bottom:0.35rem;">Portal &amp; Office</h3>
+          <p id="contactDomainDisplay" style="font-weight:700; color:var(--navy);"></p>
+          <p id="contactAddressDisplay" style="font-size:0.84rem; color:var(--muted); margin-top:0.25rem;"></p>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -183,17 +201,16 @@
   <footer>
     <div style="max-width:1220px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
       <div>
-        <strong style="color:#fff;">THE HYAKUGO BANK, LTD. (株式会社 百五銀行)</strong><br />
-        <span>Head Office: 21-27 Iwata, Tsu City, Mie Prefecture • Financial Institution Code: 0155</span>
+        <strong style="color:#fff;">CRIMSON HORIZON BANK</strong><br />
+        <span id="footerBrandDomain"></span> • Support: <span id="footerBrandEmail"></span>
       </div>
       <div>
-        <span>Registered Financial Institution: Tokai Local Finance Bureau No. 10</span><br />
-        <span>© THE HYAKUGO BANK, LTD. Multi-File Demo Project.</span>
+        <span>© 2026 Crimson Horizon Bank. Digital Banking Web Project.</span>
       </div>
     </div>
   </footer>
 
-  <div id="toast">Updated!</div>
+  <div id="toast">Notification</div>
 
   <script src="js/store.js"></script>
   <script src="js/public.js"></script>
