@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crimson Horizon Bank | Personal, Business &amp; Wealth Banking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <style>
+    .hero-visual-card {
+      margin-top: 1.5rem;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+      max-width: 540px;
+    }
+    .visual-svg-box {
+      width: 100%;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    /* Info Modal */
+    .chb-modal-bg {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px); display: none; place-items: center;
+      padding: 1.25rem; z-index: 950;
+    }
+    .chb-modal-bg.open { display: grid; }
+    .chb-modal {
+      position: relative; width: 100%; max-width: 500px; background: #fff;
+      border-top: 5px solid var(--forest); border-radius: 16px;
+      padding: 1.75rem; box-shadow: var(--shadow-3d);
+    }
+    .chb-modal-close {
+      position: absolute; top: 0.85rem; right: 1rem;
+      background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted);
+    }
+    /* Live Chat Widget */
+    .chat-fab {
+      position: fixed; bottom: 1.35rem; right: 1.35rem; z-index: 900;
+      background: var(--crimson); color: #fff; border: none;
+      padding: 0.85rem 1.25rem; border-radius: 999px;
+      font-family: inherit; font-weight: 800; font-size: 0.9rem;
+      cursor: pointer; box-shadow: 0 12px 28px rgba(200, 30, 43, 0.35);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .chat-fab:hover { background: var(--crimson-dark); transform: translateY(-2px); }
+    .chat-box {
+      position: fixed; bottom: 5.1rem; right: 1.35rem; z-index: 920;
+      width: 350px; max-width: calc(100vw - 2rem);
+      background: #fff; border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: var(--shadow-3d); display: none; flex-direction: column; overflow: hidden;
+    }
+    .chat-box.open { display: flex; }
+    .chat-head {
+      background: var(--forest-dark); color: #fff; padding: 0.9rem 1.1rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .chat-messages {
+      height: 240px; overflow-y: auto; padding: 0.9rem;
+      background: #f8faf9; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.84rem;
+    }
+    .chat-msg { padding: 0.55rem 0.8rem; border-radius: 12px; max-width: 85%; line-height: 1.4; }
+    .chat-bot { background: #ffffff; border: 1px solid var(--border); align-self: flex-start; color: var(--navy); }
+    .chat-user { background: var(--forest); color: #fff; align-self: flex-end; }
+    .chat-quick { padding: 0.5rem 0.75rem; display: flex; gap: 0.35rem; flex-wrap: wrap; border-top: 1px solid var(--border); background: #fff; }
+    .chat-chip {
+      background: var(--forest-soft); color: var(--forest); border: 1px solid #a7f3d0;
+      border-radius: 999px; padding: 0.22rem 0.6rem; font-size: 0.72rem; font-weight: 700; cursor: pointer;
+    }
+    .chat-form { display: flex; gap: 0.4rem; padding: 0.65rem; border-top: 1px solid var(--border); background: #fff; }
+    .chat-form input { flex: 1; padding: 0.5rem 0.75rem; font-size: 0.84rem; }
+  </style>
+</head>
+<body>
+
+  <div id="liveAlertBar" class="live-alert-bar alert-info"><span id="liveAlertText"></span></div>
+
+  <!-- Top Utility Bar -->
+  <div class="utility-bar">
+    <div class="utility-inner">
+      <div class="utility-links">
+        <a href="#status-sec">System Status</a>
+        <a href="#branches-sec">ATMs &amp; Branches</a>
+        <a href="#calculators-sec">Calculators</a>
+        <a href="#advice-sec">Sensible Advice</a>
+        <a href="#contact-sec">Support</a>
+      </div>
+      <div class="utility-links">
+        <span id="topBarPhone"></span>
+        <a href="auth.html?mode=signup" style="color:#6ee7b7; font-weight:700;">Enroll in Online Banking</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header class="bank-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-lockup">
+        <div class="brand-mark">CHB</div>
+        <div>
+          <div class="brand-sub">Personal • Business • Wealth</div>
+          <div class="brand-name">Crimson Horizon Bank</div>
+        </div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="#personal-sec" class="nav-item">Personal</a>
+        <a href="#business-sec" class="nav-item">Business</a>
+        <a href="#wealth-sec" class="nav-item">Wealth Management</a>
+        <a href="#about-sec" class="nav-item">About</a>
+        <a href="#branches-sec" class="nav-item">ATMs &amp; Branches</a>
+        <a href="auth.html?mode=signup" class="btn-outline">Sign Up</a>
+        <a href="auth.html" class="btn-forest">🔐 Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero + Welcome Back Login Card -->
+  <section class="hero-band">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow" id="heroEyebrowDisplay">LET’S GROW IT.</div>
+        <span class="hero-pill" id="heroBadgeDisplay"></span>
+        <div class="segment-pills">
+          <button type="button" class="seg-pill active" data-segment="personal">Personal Banking</button>
+          <button type="button" class="seg-pill" data-segment="business">Business Banking</button>
+          <button type="button" class="seg-pill" data-segment="wealth">Wealth Management</button>
+        </div>
+        <h1 class="hero-title" id="heroTitleDisplay"></h1>
+        <p class="hero-desc" id="heroDescDisplay"></p>
+        <div style="display:flex; gap:0.85rem; flex-wrap:wrap;">
+          <a href="auth.html?mode=signup" class="btn" id="heroCtaBtn">Open Free Account →</a>
+          <a href="#smart-moves-sec" class="btn-outline">Explore Products</a>
+        </div>
+
+        <!-- Finance Graphic Showcase -->
+        <div class="hero-visual-card">
+          <svg width="88" height="58" viewBox="0 0 88 58" fill="none" aria-hidden="true">
+            <rect width="88" height="58" rx="9" fill="url(#cardGrad)"/>
+            <rect x="10" y="16" width="16" height="12" rx="3" fill="#FDE68A"/>
+            <rect x="10" y="38" width="44" height="4" rx="2" fill="rgba(255,255,255,0.65)"/>
+            <circle cx="70" cy="40" r="6" fill="rgba(255,255,255,0.35)"/>
+            <defs><linearGradient id="cardGrad" x1="0" y1="0" x2="88" y2="58"><stop stop-color="#C81E2B"/><stop offset="1" stop-color="#0B5D3B"/></linearGradient></defs>
+          </svg>
+          <div>
+            <strong style="font-size:0.9rem; display:block;">3D Horizon Card &amp; Instant Digital Vaults</strong>
+            <span style="font-size:0.78rem; color:var(--muted);">Open Everyday Checking in minutes with ¥100,000 demo starter balance &amp; live 3D card dashboard.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Welcome Back Online Banking Login Card -->
+      <div class="direct-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+          <h3 style="font-size:1.15rem; font-weight:800;">Welcome Back</h3>
+          <span class="tag tag-green" style="margin:0;">Online Banking Login</span>
+        </div>
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">
+          Sign in to access Everyday Checking, 3D Horizon Card, and instant transfers.
+        </p>
+
+        <form id="heroLoginForm">
+          <div class="form-group">
+            <label for="heroLoginEmail">Login ID (Email)</label>
+            <input type="email" id="heroLoginEmail" placeholder="demo@horizonbank.jp" required />
+          </div>
+          <div class="form-group">
+            <label for="heroLoginPass">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="heroLoginPass" placeholder="••••••••" required style="padding-right:3.5rem;" />
+              <button type="button" class="pass-show-btn" id="toggleHeroPassBtn">Show</button>
+            </div>
+          </div>
+          <button type="submit" class="btn-forest" style="width:100%;">Login →</button>
+        </form>
+
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.4rem; font-size:0.75rem; margin-top:0.75rem;">
+          <a href="#" id="forgotCredsLink" style="color:var(--slate); text-decoration:none;">Forgot Username | Forgot Password</a>
+          <a href="auth.html?mode=signup" style="color:var(--crimson); font-weight:800; text-decoration:none;">Enroll in Online Banking</a>
+        </div>
+
+        <div class="other-acct-links">
+          <div style="margin-bottom:0.25rem; font-weight:700; color:var(--slate);">Manage other accounts:</div>
+          <a href="auth.html">Merchant Connect</a> ·
+          <a href="auth.html">Online Trust Login</a> ·
+          <a href="auth.html">Remote Deposit Capture</a>
+          <div style="margin-top:0.35rem;">Demo Login: <strong>demo@horizonbank.jp</strong> / <strong>Demo1234</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Service & Channel Status -->
+  <section class="band-white" id="status-sec">
+    <div class="container" style="padding-top:2rem; padding-bottom:2rem;">
+      <div class="sec-head" style="margin-bottom:1rem;">
+        <h2>Live Service &amp; Channel Status</h2>
+        <span style="font-size:0.84rem; color:var(--forest); font-weight:700;">Digital Core Systems Monitored 24/7</span>
+      </div>
+      <div class="status-grid" id="liveStatusGrid"></div>
+    </div>
+  </section>
+
+  <!-- Has Your Back -->
+  <section class="container">
+    <div class="sec-center">
+      <h2>See What You Can Do When Crimson Horizon Has Your Back</h2>
+      <p>Modern digital banking paired with personal guidance—built to protect and grow what matters most.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card card-3d-hover">
+        <div class="pillar-icon">🛡️</div>
+        <h3 style="margin-bottom:0.45rem;">Security That Stays Miles Ahead</h3>
+        <p style="font-size:0.9rem; color:var(--slate);">2-step verification, system firewalls, admin-monitored 3D card locking, and real-time alerts.</p>
+      </div>
+      <div class="card card-3d-hover">
+        <div class="pillar-icon">🏦</div>
+        <h3 style="margin-bottom:0.45rem;">Account Safeguards &amp; Transparency</h3>
+        <p style="font-size:0.9rem; color:var(--slate);">Everyday, Relationship, Student, and Fresh Start Checking with zero hidden monthly fees.</p>
+      </div>
+      <div class="card card-3d-hover">
+        <div class="pillar-icon">💬</div>
+        <h3 style="margin-bottom:0.45rem;">Live Chat &amp; Personal Support</h3>
+        <p style="font-size:0.9rem; color:var(--slate);">Connect immediately via Live Chat below, Video Banking, email, or phone whenever you need help.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Let's Find What You Need -->
+  <section class="band-white" id="personal-sec">
+    <div class="container">
+      <div class="sec-center">
+        <h2>Let’s Find What You Need</h2>
+        <p>Personal Banking, Business Solutions, and Wealth Services in one place.</p>
+      </div>
+      <div class="grid-4">
+        <a href="auth.html?mode=signup" class="need-tile">
+          <div><div class="pillar-icon">💵</div><h3 style="margin-bottom:0.4rem;">Open a Checking Account</h3><p style="font-size:0.86rem; color:var(--muted);">Everyday, Relationship, Student &amp; Fresh Start Checking.</p></div>
+          <span class="need-link">Get Started Online →</span>
+        </a>
+        <a href="#" class="need-tile js-info-modal" data-modal="loan">
+          <div><div class="pillar-icon">🏠</div><h3 style="margin-bottom:0.4rem;">Apply for a Loan</h3><p style="font-size:0.86rem; color:var(--muted);">Home mortgages, personal lending, SBA &amp; commercial financing.</p></div>
+          <span class="need-link">View Loan Options →</span>
+        </a>
+        <a href="auth.html" class="need-tile">
+          <div><div class="pillar-icon">💳</div><h3 style="margin-bottom:0.4rem;">Simplify Billing &amp; Cards</h3><p style="font-size:0.86rem; color:var(--muted);">3D Debit &amp; Business Cards, Easy Save round-ups, and Bill Pay.</p></div>
+          <span class="need-link">Manage Cards &amp; Payments →</span>
+        </a>
+        <a href="#wealth-sec" class="need-tile">
+          <div><div class="pillar-icon">📈</div><h3 style="margin-bottom:0.4rem;">Plan Wealth &amp; Retirement</h3><p style="font-size:0.86rem; color:var(--muted);">Financial Planning, Investment Management, IRAs &amp; Trusts.</p></div>
+          <span class="need-link">Explore Wealth Services →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Smart Moves with Finance Visuals -->
+  <section class="container" id="smart-moves-sec">
+    <div class="sec-center">
+      <h2>Smart Moves</h2>
+      <p>Explore our latest featured checking, card, and financing solutions.</p>
+    </div>
+    <div class="grid-3">
+      <div class="smart-card">
+        <div class="smart-banner">
+          <div class="visual-svg-box">
+            <svg width="200" height="90" viewBox="0 0 200 90" fill="none">
+              <rect x="20" y="10" width="160" height="72" rx="12" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.35)"/>
+              <rect x="34" y="26" width="24" height="16" rx="4" fill="#FDE68A"/>
+              <text x="34" y="64" fill="#fff" font-size="11" font-weight="bold" font-family="sans-serif">HORIZON REWARDS 3D</text>
+            </svg>
+          </div>
+          <h3>Cash Back Rewards + 3D Card</h3>
+        </div>
+        <div class="smart-body">
+          <p style="font-size:0.9rem; color:var(--slate); margin-bottom:1.25rem;">Contactless payments, single-use virtual cards, and real-time spending limits.</p>
+          <a href="auth.html?mode=signup" class="btn" style="width:100%;">Open Account &amp; Get Card →</a>
+        </div>
+      </div>
+
+      <div class="smart-card">
+        <div class="smart-banner" style="background:linear-gradient(135deg, var(--crimson) 0%, var(--crimson-dark) 100%);">
+          <div class="visual-svg-box">
+            <svg width="200" height="90" viewBox="0 0 200 90" fill="none">
+              <path d="M20 70 L65 48 L105 55 L145 25 L180 15" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="145" cy="25" r="5" fill="#FDE68A"/><circle cx="180" cy="15" r="6" fill="#6EE7B7"/>
+            </svg>
+          </div>
+          <h3>Zero Monthly Fee + Easy Save</h3>
+        </div>
+        <div class="smart-body">
+          <p style="font-size:0.9rem; color:var(--slate); margin-bottom:1.25rem;">Paperless eStatements, linked Personal Savings, and automatic round-ups.</p>
+          <a href="auth.html?mode=signup" class="btn-forest" style="width:100%;">Open Everyday Checking →</a>
+        </div>
+      </div>
+
+      <div class="smart-card">
+        <div class="smart-banner" style="background:linear-gradient(135deg, #1f352f 0%, #0f172a 100%);">
+          <div class="visual-svg-box">
+            <svg width="200" height="90" viewBox="0 0 200 90" fill="none">
+              <rect x="45" y="18" width="24" height="54" rx="4" fill="#6EE7B7"/>
+              <rect x="85" y="32" width="24" height="40" rx="4" fill="#93C5FD"/>
+              <rect x="125" y="10" width="24" height="62" rx="4" fill="#FCA5A5"/>
+            </svg>
+          </div>
+          <h3>Business Advantage &amp; Treasury</h3>
+        </div>
+        <div class="smart-body">
+          <p style="font-size:0.9rem; color:var(--slate); margin-bottom:1.25rem;">Remote Deposit Capture, ACH &amp; wires, and SBA &amp; Commercial Growth Loans.</p>
+          <a href="auth.html?mode=signup" class="btn-outline" style="width:100%;">Enroll Your Business →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Business, Wealth, Calculator & Rates -->
+  <section class="band-sage" id="business-sec">
+    <div class="container">
+      <div class="grid-2" style="margin-bottom:2rem;">
+        <div class="card">
+          <span class="tag tag-green">Business &amp; Treasury Management</span>
+          <h3 style="font-size:1.3rem; margin-bottom:0.6rem;">Business Checking, Lending &amp; Cash Flow</h3>
+          <p style="font-size:0.9rem; color:var(--slate); margin-bottom:1rem;">From Free Business Advantage Checking to Receivables, Lockbox, and Commercial Real Estate loans.</p>
+          <a href="auth.html?mode=signup" class="btn-forest">Get Started with Business →</a>
+        </div>
+
+        <div class="card" id="wealth-sec">
+          <span class="tag tag-red">Wealth Management &amp; Retirement</span>
+          <h3 style="font-size:1.3rem; margin-bottom:0.6rem;">Financial Planning, IRAs &amp; Estate Services</h3>
+          <p style="font-size:0.9rem; color:var(--slate); margin-bottom:1rem;">Work with experienced wealth advisors on portfolios, IRAs, Employee Benefit Plans, and Online Trust services.</p>
+          <a href="auth.html" class="btn-outline">Access Wealth &amp; Trust →</a>
+        </div>
+      </div>
+
+      <div class="card" id="calculators-sec">
+        <div class="sec-head" style="margin-bottom:1rem;">
+          <div><h2>Personal Finance &amp; Wealth Calculator</h2><p style="font-size:0.86rem; color:var(--muted);">Estimate your compound savings growth.</p></div>
+          <span class="tag tag-green" style="margin:0;">Interactive Tool</span>
+        </div>
+        <div class="grid-2" style="align-items:center;">
+          <div class="grid-2" style="gap:0.9rem;">
+            <div class="form-group" style="margin:0;"><label for="calcAmount">Initial Deposit (¥)</label><input type="number" id="calcAmount" value="500000" min="0" step="50000" /></div>
+            <div class="form-group" style="margin:0;"><label for="calcMonthly">Monthly Savings (¥)</label><input type="number" id="calcMonthly" value="50000" min="0" step="5000" /></div>
+            <div class="form-group" style="margin:0;"><label for="calcRate">Annual Yield (%)</label><input type="number" id="calcRate" value="3.5" min="0" max="20" step="0.25" /></div>
+            <div class="form-group" style="margin:0;"><label for="calcYears">Years</label><input type="number" id="calcYears" value="10" min="1" max="40" step="1" /></div>
+          </div>
+          <div style="background:var(--forest-dark); color:#fff; border-radius:14px; padding:1.5rem;">
+            <span style="font-size:0.8rem; color:#a7f3d0; text-transform:uppercase;">Projected Future Balance</span>
+            <div id="calcResultValue" style="font-size:2.2rem; font-weight:800; margin:0.35rem 0;">¥0</div>
+            <p id="calcBreakdownText" style="font-size:0.84rem; color:#d1fae5;"></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="rates-sec"><div class="rates-strip" id="liveRatesStrip"></div></div>
+    </div>
+  </section>
+
+  <!-- Sensible Advice -->
+  <section class="band-white" id="advice-sec">
+    <div class="container">
+      <div class="sec-head">
+        <div><h2>Sensible Advice You Can Count On</h2><p style="color:var(--muted); font-size:0.92rem;">Click any filter or article to read more.</p></div>
+      </div>
+      <div class="filter-pills" id="adviceFilterPills"></div>
+      <div class="grid-3" id="publicInsightsGrid"></div>
+    </div>
+  </section>
+
+  <!-- Security, Branches, Notices & Contact -->
+  <section class="container" id="about-sec">
+    <div class="security-banner">
+      <strong>Security Reminder:</strong> Crimson Horizon Bank will never ask for your debit card number, account credentials, online banking password, security codes, or remote access to your device.
+    </div>
+
+    <div class="grid-2" style="margin-bottom:2rem;">
+      <div class="card" id="branches-sec">
+        <span class="tag tag-green">ATMs &amp; Branches • Video Banking</span>
+        <h3 style="font-size:1.3rem; margin-bottom:0.5rem;">Local Branches &amp; Video Banking</h3>
+        <p style="font-size:0.9rem; color:var(--slate); margin-bottom:0.85rem;">Visit our banking centers or connect face-to-face with a Horizon banker.</p>
+        <div style="font-size:0.86rem; color:var(--slate); background:var(--bg); padding:0.9rem; border-radius:10px; margin-bottom:1rem;">
+          <div><strong>Branch Lobby:</strong> Mon–Fri, 9:00 AM – 5:00 PM</div>
+          <div><strong>Video Banking:</strong> Mon–Sat, 8:00 AM – 8:00 PM</div>
+          <div><strong>ATM Network:</strong> Available 24 Hours</div>
+        </div>
+        <button type="button" class="btn-outline js-info-modal" data-modal="branches">View Branch Locations →</button>
+      </div>
+
+      <div class="card" id="notices-sec">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <h3>News, Community &amp; Notices</h3>
+          <span class="tag tag-amber" style="margin:0;">Official Updates</span>
+        </div>
+        <div id="publicNoticesList"></div>
+      </div>
+    </div>
+
+    <div id="contact-sec">
+      <div class="sec-head"><h2>Contact Crimson Horizon Bank</h2><span style="font-size:0.85rem; color:var(--muted);">Help &amp; Support</span></div>
+      <div class="grid-3">
+        <div class="card"><span class="tag tag-red">Email Support</span><h3 style="margin-bottom:0.3rem;">Official Email</h3><p id="contactEmailDisplay" style="font-weight:700; word-break:break-all;"></p></div>
+        <div class="card"><span class="tag tag-green">Phone Care</span><h3 style="margin-bottom:0.3rem;">Customer Support Line</h3><p id="contactPhoneDisplay" style="font-weight:700;"></p></div>
+        <div class="card"><span class="tag tag-blue">Portal &amp; Office</span><h3 style="margin-bottom:0.3rem;">Headquarters</h3><p id="contactDomainDisplay" style="font-weight:700;"></p><p id="contactAddressDisplay" style="font-size:0.84rem; color:var(--muted); margin-top:0.2rem;"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="multi-footer">
+    <div class="footer-grid">
+      <div><h4 style="font-size:1.1rem;">Crimson Horizon Bank</h4><p style="color:#94a3b8; margin-bottom:0.85rem;">Personal, Business, and Wealth Management built on transparency and 24/7 digital protection.</p><div><strong>Domain:</strong> <span id="footerBrandDomain"></span></div><div><strong>Email:</strong> <span id="footerBrandEmail"></span></div></div>
+      <div><h4>Personal &amp; Business</h4><ul><li><a href="#personal-sec">Everyday Checking</a></li><li><a href="#smart-moves-sec">Smart Moves &amp; Cards</a></li><li><a href="#business-sec">Business Treasury</a></li><li><a href="auth.html?mode=signup">Enroll in Online Banking</a></li></ul></div>
+      <div><h4>Wealth &amp; Calculators</h4><ul><li><a href="#wealth-sec">Financial Planning &amp; IRAs</a></li><li><a href="#wealth-sec">Estate &amp; Trust</a></li><li><a href="#calculators-sec">Wealth Calculator</a></li><li><a href="#advice-sec">Sensible Advice Hub</a></li></ul></div>
+      <div><h4>About &amp; Status</h4><ul><li><a href="#status-sec">System Status</a></li><li><a href="#branches-sec">ATMs &amp; Branches</a></li><li><a href="#notices-sec">Notices</a></li><li><a href="#contact-sec">Contact Support</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Crimson Horizon Bank. Digital Banking Web Application.</span>
+      <span>Always verify our official domain before signing in.</span>
+    </div>
+  </footer>
+
+  <!-- Interactive Info / Loan / Branch Modal -->
+  <div id="infoModalBg" class="chb-modal-bg">
+    <div class="chb-modal">
+      <button type="button" class="chb-modal-close" id="closeInfoModal">&times;</button>
+      <span class="tag tag-green" id="infoModalTag">Horizon Info</span>
+      <h3 id="infoModalTitle" style="margin-bottom:0.5rem;">Title</h3>
+      <div id="infoModalBody" style="font-size:0.9rem; color:var(--slate); margin-bottom:1.25rem;"></div>
+      <a href="auth.html?mode=signup" class="btn-forest" id="infoModalCta" style="width:100%;">Open Account / Apply Online →</a>
+    </div>
+  </div>
+
+  <!-- Customer Live Chat Widget -->
+  <button type="button" class="chat-fab" id="chatFab">💬 Live Chat Support</button>
+  <div class="chat-box" id="chatBox">
+    <div class="chat-head">
+      <div>
+        <strong style="display:block; font-size:0.92rem;">Horizon Live Support</strong>
+        <span style="font-size:0.72rem; color:#a7f3d0;">● Agent Online</span>
+      </div>
+      <button type="button" id="closeChatBtn" style="background:none; border:none; color:#fff; font-size:1.25rem; cursor:pointer;">&times;</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-quick">
+      <button type="button" class="chat-chip" data-q="How do I open an account?">Open Account</button>
+      <button type="button" class="chat-chip" data-q="My card is frozen">Card Frozen</button>
+      <button type="button" class="chat-chip" data-q="What are wire fees?">Wire Fees</button>
+    </div>
+    <form class="chat-form" id="chatForm">
+      <input type="text" id="chatInput" placeholder="Ask a question..." required />
+      <button type="submit" class="btn" style="padding:0.45rem 0.85rem;">Send</button>
+    </form>
+  </div>
+
+  <div id="toast">Notification</div>
+
+  <script src="js/store.js?v=5"></script>
+  <script>
+    (function () {
+      // Built-in fail-safe HorizonStore in case js/store.js is missing or cached
+      if (!window.HorizonStore) {
+        const SK = "chb_portal_db_v1", SESS = "chb_active_user_id", ADM = "chb_admin_unlocked";
+        const DEF = {
+          contact: { domain: "crimsonhorizonbank.jp", email: "horizonbank.jp@gmail.com", phone: "+81-3-5550-0105", address: "Otemachi Financial Tower, Tokyo" },
+          adminCredentials: { username: "admin", passcode: "CHB2026" },
+          alert: { enabled: true, style: "alert-info", text: "Welcome to Crimson Horizon Bank Online Banking — 24/7 Digital Services Active." },
+          hero: { eyebrow: "LET'S GROW IT.", badge: "Crimson Horizon Bank • Personal, Business & Wealth", title: "Banking That Supports You Every Step of the Way.", desc: "Open Everyday Checking, Business Advantage, or Wealth accounts online with instant 3D card controls.", cta: "Open Free Account →" },
+          serviceStatus: [
+            { name: "Online & Mobile Banking", sub: "24/7 Login & Balance Sync", status: "Operational" },
+            { name: "3D Horizon Card & Freeze", sub: "POS, Online & Virtual Cards", status: "Operational" },
+            { name: "ACH, Wires & Remote Deposit", sub: "Domestic & Global FX", status: "Operational" },
+            { name: "ATMs & Video Banking", sub: "8:00 AM – 8:00 PM Extended", status: "Operational" }
+          ],
+          rates: { usdJpy: "¥151.40", eurJpy: "¥160.25", timeRate: "0.45%", loanRate: "0.475%" },
+          templates: [], notices: [{ id: "n1", date: "2026.11.25", tag: "Security", tagClass: "tag-red", text: "24/7 Digital Banking & 3D Card Controls active." }],
+          insights: [{ id: "i1", tag: "Personal Finance", title: "The 50 / 30 / 20 Rule", body: "Automate 20% of income straight into Easy Save or high-yield deposits." }],
+          customers: [{ id: "u_demo", fullName: "Alex Morgan", email: "demo@horizonbank.jp", phone: "+81-90-1234-5678", password: "Demo1234", accountNumber: "8801-001-4821", status: "Active", cardFrozen: false, balances: { checking: 2485320, savings: 5000000, vault: 1840000 }, savingsGoal: { name: "Savings Goal", target: 8000000, current: 5000000 }, ledger: [] }],
+          chatMessages: []
+        };
+        const load = () => { try { return JSON.parse(localStorage.getItem(SK)) || JSON.parse(JSON.stringify(DEF)); } catch { return JSON.parse(JSON.stringify(DEF)); } };
+        const save = (d) => { try { localStorage.setItem(SK, JSON.stringify(d)); } catch {} };
+        window.HorizonStore = {
+          STORAGE_KEY: SK, load, save, reset: () => { const f = JSON.parse(JSON.stringify(DEF)); save(f); return f; },
+          loginCustomer: (e, p) => {
+            const db = load(), u = db.customers.find((c) => c.email.toLowerCase() === e.trim().toLowerCase() && c.password === p);
+            if (!u) return { ok: false, error: "Invalid email or password." };
+            if (u.status === "Suspended") return { ok: false, error: "Account frozen. Contact " + db.contact.email };
+            localStorage.setItem(SESS, u.id); return { ok: true, user: u };
+          },
+          escapeHtml: (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])),
+          formatJPY: (a) => new Intl.NumberFormat("ja-JP", { style: "currency", currency: "JPY" }).format(a),
+          renderAlertBar: (db) => {
+            const b = document.getElementById("liveAlertBar"), t = document.getElementById("liveAlertText");
+            if (b && t) { b.className = "live-alert-bar " + db.alert.style + (db.alert.enabled ? "" : " hidden"); t.textContent = db.alert.text; }
+          },
+          showToast: (m) => { const el = document.getElementById("toast"); if (el) { el.textContent = m; el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 3000); } }
+        };
+      }
+
+      const { STORAGE_KEY, load, save, loginCustomer, escapeHtml, formatJPY, renderAlertBar, showToast } = window.HorizonStore;
+      let activeAdviceFilter = "All";
+
+      const SEGMENT_COPY = {
+        personal: { title: null, desc: null },
+        business: { title: "Business Banking That Supports You Every Step of the Way.", desc: "Free Business Advantage Checking, Treasury Management, Remote Deposit Capture, and flexible growth loans." },
+        wealth: { title: "Sensible Wealth Management Built Around Your Life Goals.", desc: "Financial Planning, Investment Management, IRAs, and Estate & Trust Services tailored to your timeline." }
+      };
+
+      function renderPublicPage() {
+        const db = load();
+        renderAlertBar(db);
+        document.getElementById("heroEyebrowDisplay").textContent = db.hero.eyebrow || "LET'S GROW IT.";
+        document.getElementById("heroBadgeDisplay").textContent = db.hero.badge;
+        document.getElementById("heroTitleDisplay").textContent = db.hero.title;
+        document.getElementById("heroDescDisplay").textContent = db.hero.desc;
+        document.getElementById("heroCtaBtn").textContent = db.hero.cta;
+
+        document.getElementById("liveStatusGrid").innerHTML = (db.serviceStatus || []).map((s) => `
+          <div class="status-item">
+            <div><strong style="font-size:0.9rem;">${escapeHtml(s.name)}</strong><div style="font-size:0.75rem; color:var(--muted);">${escapeHtml(s.sub)}</div></div>
+            <span class="status-dot ${s.status === "Operational" ? "dot-ok" : "dot-warn"}">● ${escapeHtml(s.status)}</span>
+          </div>
+        `).join("");
+
+        document.getElementById("liveRatesStrip").innerHTML = `
+          <div class="rate-box"><span>USD / JPY Rate</span><strong>${escapeHtml(db.rates.usdJpy)}</strong><small>Global FX Ready</small></div>
+          <div class="rate-box"><span>EUR / JPY Rate</span><strong>${escapeHtml(db.rates.eurJpy)}</strong><small>Zero Hidden Spread</small></div>
+          <div class="rate-box"><span>1-Year Time Deposit</span><strong>${escapeHtml(db.rates.timeRate)}</strong><small>Smart Savings Yield</small></div>
+          <div class="rate-box"><span>Housing Loan (Variable)</span><strong>${escapeHtml(db.rates.loanRate)}</strong><small>Competitive APR</small></div>
+        `;
+
+        const uniqueTags = ["All", ...new Set(db.insights.map((i) => i.tag))];
+        if (!uniqueTags.includes(activeAdviceFilter)) activeAdviceFilter = "All";
+        document.getElementById("adviceFilterPills").innerHTML = uniqueTags.map((tag) => `
+          <button type="button" class="filter-pill ${tag === activeAdviceFilter ? "active" : ""}" data-advtag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>
+        `).join("");
+
+        const filtered = activeAdviceFilter === "All" ? db.insights : db.insights.filter((i) => i.tag === activeAdviceFilter);
+        document.getElementById("publicInsightsGrid").innerHTML = filtered.map((item, idx) => `
+          <div class="card card-3d-hover" style="cursor:pointer;" data-insight-idx="${idx}">
+            <span class="tag tag-green">${escapeHtml(item.tag)}</span>
+            <h3 style="margin-bottom:0.45rem;">${escapeHtml(item.title)}</h3>
+            <p style="font-size:0.9rem; color:var(--slate);">${escapeHtml(item.body)}</p>
+          </div>
+        `).join("") || `<p style="color:var(--muted);">No advice topics published yet.</p>`;
+
+        document.getElementById("publicNoticesList").innerHTML = db.notices.map((n) => `
+          <div class="notice-row">
+            <span class="notice-date">${escapeHtml(n.date)}</span>
+            <span class="tag ${escapeHtml(n.tagClass)}" style="margin:0;">${escapeHtml(n.tag)}</span>
+            <span style="flex:1; font-size:0.92rem;">${escapeHtml(n.text)}</span>
+          </div>
+        `).join("") || `<p style="color:var(--muted);">No notices at this time.</p>`;
+
+        document.getElementById("topBarPhone").textContent = "Support: " + db.contact.phone;
+        document.getElementById("contactEmailDisplay").innerHTML = `<a href="mailto:${escapeHtml(db.contact.email)}" style="color:var(--crimson); text-decoration:none;">${escapeHtml(db.contact.email)}</a>`;
+        document.getElementById("contactPhoneDisplay").textContent = db.contact.phone;
+        document.getElementById("contactDomainDisplay").textContent = db.contact.domain;
+        document.getElementById("contactAddressDisplay").textContent = db.contact.address;
+        document.getElementById("footerBrandDomain").textContent = db.contact.domain;
+        document.getElementById("footerBrandEmail").textContent = db.contact.email;
+      }
+
+      // Segment Pills
+      document.querySelectorAll(".seg-pill").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".seg-pill").forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          const db = load(), copy = SEGMENT_COPY[this.dataset.segment];
+          document.getElementById("heroTitleDisplay").textContent = copy.title || db.hero.title;
+          document.getElementById("heroDescDisplay").textContent = copy.desc || db.hero.desc;
+        });
+      });
+
+      document.getElementById("adviceFilterPills").addEventListener("click", function (e) {
+        const btn = e.target.closest("button[data-advtag]");
+        if (!btn) return;
+        activeAdviceFilter = btn.dataset.advtag;
+        renderPublicPage();
+      });
+
+      // Interactive Info Modal (Loans, Branches, Forgot Creds)
+      const infoModal = document.getElementById("infoModalBg");
+      function showInfoModal(tag, title, htmlBody) {
+        document.getElementById("infoModalTag").textContent = tag;
+        document.getElementById("infoModalTitle").textContent = title;
+        document.getElementById("infoModalBody").innerHTML = htmlBody;
+        infoModal.classList.add("open");
+      }
+      document.getElementById("closeInfoModal").addEventListener("click", () => infoModal.classList.remove("open"));
+      infoModal.addEventListener("click", (e) => { if (e.target === infoModal) infoModal.classList.remove("open"); });
+
+      document.querySelectorAll(".js-info-modal").forEach((el) => {
+        el.addEventListener("click", function (e) {
+          e.preventDefault();
+          const db = load();
+          if (this.dataset.modal === "loan") {
+            showInfoModal("Lending & Mortgages", "Home, Personal & Business Loans",
+              `<p>Current Variable Housing Rate: <strong>${escapeHtml(db.rates.loanRate)}</strong>. Enroll online to submit your loan pre-qualification or email <strong>${escapeHtml(db.contact.email)}</strong>.</p>`);
+          } else if (this.dataset.modal === "branches") {
+            showInfoModal("Branches & Video Banking", "Tokyo & Regional Banking Centers",
+              `<p><strong>Headquarters:</strong> ${escapeHtml(db.contact.address)}<br><strong>Video Banking Hours:</strong> Mon–Sat 8:00 AM – 8:00 PM<br><strong>Phone:</strong> ${escapeHtml(db.contact.phone)}</p>`);
+          }
+        });
+      });
+
+      document.getElementById("forgotCredsLink").addEventListener("click", function (e) {
+        e.preventDefault();
+        const db = load();
+        showInfoModal("Account Recovery", "Forgot Username or Password?",
+          `<p>Use Demo Login: <strong>demo@horizonbank.jp</strong> / <strong>Demo1234</strong>, or contact support at <strong>${escapeHtml(db.contact.email)}</strong>.</p>`);
+      });
+
+      const passInput = document.getElementById("heroLoginPass");
+      document.getElementById("toggleHeroPassBtn").addEventListener("click", function () {
+        const hidden = passInput.type === "password";
+        passInput.type = hidden ? "text" : "password";
+        this.textContent = hidden ? "Hide" : "Show";
+      });
+
+      document.getElementById("heroLoginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const res = loginCustomer(document.getElementById("heroLoginEmail").value, document.getElementById("heroLoginPass").value);
+        if (!res.ok) { showToast(res.error); return; }
+        showToast(`Welcome back, ${res.user.fullName}!`);
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 450);
+      });
+
+      // Calculator
+      function runCalculator() {
+        const P = Math.max(0, Number(document.getElementById("calcAmount").value) || 0);
+        const PMT = Math.max(0, Number(document.getElementById("calcMonthly").value) || 0);
+        const r = Math.max(0, Number(document.getElementById("calcRate").value) || 0) / 100 / 12;
+        const n = Math.max(1, Number(document.getElementById("calcYears").value) || 1) * 12;
+        const fv = r === 0 ? P + PMT * n : P * Math.pow(1 + r, n) + PMT * ((Math.pow(1 + r, n) - 1) / r);
+        const c = P + PMT * n;
+        document.getElementById("calcResultValue").textContent = formatJPY(Math.round(fv));
+        document.getElementById("calcBreakdownText").textContent = `Contributed: ${formatJPY(Math.round(c))} • Growth: ${formatJPY(Math.round(Math.max(0, fv - c)))}`;
+      }
+      ["calcAmount", "calcMonthly", "calcRate", "calcYears"].forEach((id) => document.getElementById(id).addEventListener("input", runCalculator));
+
+      // Live Chat Logic (Saves inquiries for Admin Panel too!)
+      const chatBox = document.getElementById("chatBox");
+      const chatMsgs = document.getElementById("chatMessages");
+      function renderChat() {
+        const db = load();
+        const msgs = db.chatMessages || [];
+        const intro = `<div class="chat-msg chat-bot">Hello! Welcome to Crimson Horizon Bank Live Support. How can we help you today?</div>`;
+        chatMsgs.innerHTML = intro + msgs.map((m) =>
+          `<div class="chat-msg ${m.sender === "user" ? "chat-user" : "chat-bot"}">${escapeHtml(m.text)}</div>`
+        ).join("");
+        chatMsgs.scrollTop = chatMsgs.scrollHeight;
+      }
+
+      function sendChat(text) {
+        const db = load();
+        if (!db.chatMessages) db.chatMessages = [];
+        db.chatMessages.push({ sender: "user", text, time: new Date().toLocaleTimeString() });
+        const lower = text.toLowerCase();
+        let reply = `Thanks! Our support team (${db.contact.email}) received your message. You can also call ${db.contact.phone}.`;
+        if (lower.includes("open") || lower.includes("account") || lower.includes("sign")) {
+          reply = "Click 'Sign Up' at the top or 'Enroll in Online Banking' to complete our 4-step registration in under 1 minute!";
+        } else if (lower.includes("frozen") || lower.includes("freeze") || lower.includes("card")) {
+          reply = "Card freezes are managed by Bank Security for your safety. Please email " + db.contact.email + " with your account number to verify and unfreeze.";
+        } else if (lower.includes("fee") || lower.includes("wire") || lower.includes("transfer")) {
+          reply = "Internal Crimson Horizon transfers are ¥0! Standard domestic wires and FX rates are shown in your dashboard.";
+        }
+        db.chatMessages.push({ sender: "bot", text: reply, time: new Date().toLocaleTimeString() });
+        save(db);
+        renderChat();
+      }
+
+      document.getElementById("chatFab").addEventListener("click", () => { chatBox.classList.toggle("open"); renderChat(); });
+      document.getElementById("closeChatBtn").addEventListener("click", () => chatBox.classList.remove("open"));
+      document.querySelectorAll(".chat-chip").forEach((c) => c.addEventListener("click", () => sendChat(c.dataset.q)));
+      document.getElementById("chatForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const inp = document.getElementById("chatInput");
+        if (!inp.value.trim()) return;
+        sendChat(inp.value.trim());
+        inp.value = "";
+      });
+
+      window.addEventListener("storage", (e) => { if (e.key === STORAGE_KEY) { renderPublicPage(); renderChat(); } });
+      renderPublicPage();
+      runCalculator();
+      renderChat();
+    })();
+  </script>
+</body>
+</html>
